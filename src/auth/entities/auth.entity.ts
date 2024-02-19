@@ -1,7 +1,14 @@
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
 export class Auth {
 
+    @PrimaryGeneratedColumn('uuid')
     id: string;
-    lastname: string;
-    name: string;
+
+    @Column('text', {
+        unique: true,
+    })
+    email: string;
 
 }
