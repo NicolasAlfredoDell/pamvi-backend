@@ -12,6 +12,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
+import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
+import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     SeedModule,
     UsersModule,
+    TypesOfUsersModule,
+    GenderOfUsersModule,
   ],
   controllers: [],
   providers: [],

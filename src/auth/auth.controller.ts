@@ -2,6 +2,7 @@ import { Body, Controller, Param, ParseUUIDPipe, Post, UsePipes, ValidationPipe 
 
 // DTOs
 import { AuthDto } from './dto/auth.dto';
+import { CreateAuthDto } from './dto/create-auth.dto';
 
 // Services
 import { AuthService } from './auth.service';
@@ -13,12 +14,17 @@ export class AuthController {
         private readonly authService: AuthService,
     ) { }
 
+    @Post()
+    create( @Body() createAuthDto: CreateAuthDto ) {
+        return this.authService.create(createAuthDto);
+    }
+
     @Post(':id')
     login(
         @Body() authDto: AuthDto,
         @Param('id', new ParseUUIDPipe({ version: '4' }) ) id: string,
     ) {
-        this.authService.findOneById(id, authDto);
+        
     }
 
     @Post()
