@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: pamvi-docker
+    image: pamviapp
     container_name: pamviapp
     restart: always
     ports:
