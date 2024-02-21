@@ -1,8 +1,7 @@
-import { Body, Controller, Param, ParseUUIDPipe, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 
 // DTOs
-import { AuthDto } from './dto/auth.dto';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 // Services
 import { AuthService } from './auth.service';
@@ -14,26 +13,26 @@ export class AuthController {
         private readonly authService: AuthService,
     ) { }
 
-    @Post()
-    create( @Body() createAuthDto: CreateAuthDto ) {
-        return this.authService.create(createAuthDto);
-    }
-
     @Post(':id')
     login(
-        @Body() authDto: AuthDto,
+        @Body() createUserDto: CreateUserDto,
         @Param('id', new ParseUUIDPipe({ version: '4' }) ) id: string,
     ) {
         
     }
 
-    @Post()
+    @Patch()
     recoveryPassword() {
         
     }
 
     @Post()
-    register() {
+    register( @Body() createUserDto: CreateUserDto ) {
+        return this.authService.create(createUserDto);
+    }
+
+    @Post()
+    sendMailForRecoveryPassword() {
         
     }
 

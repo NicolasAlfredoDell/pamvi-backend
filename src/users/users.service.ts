@@ -1,61 +1,53 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuid } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
 
-  users: User[] = [];
+  private readonly logger = new Logger('UsersService');
+
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>, 
+  ) {}
 
   create(createUserDto: CreateUserDto) {
-    const { name, lastname } = createUserDto;
-
-    const user: User = {
-      id: uuid(),
-      name: name.toLocaleLowerCase(),
-      lastname,
-      createdAt: new Date().getTime()
-    };
-
-    this.users.push( user );
-  
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    return await this.userRepository.find({});
   }
 
-  findOne(id: string) {
-    const user = this.users.find( user => user.id == id );
+  async findOne(id: string) {
+    const user = await this.userRepository.findOneBy({ id });
 
-    if ( !user ) throw new NotFoundException(`Usuario con el id ${id} no existe.`);
-  
-    return user;
+    if ( !user ) throw new NotFoundException(`No existe el usuario.`);
+
+    return user
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    let userDB = this.findOne( id );
-
-    this.users = this.users.map( user => {
-      if ( user.id == id ) {
-        userDB.updatedAt = new Date().getTime();
-        userDB = { ...userDB, ...UpdateUserDto };
-
-        return userDB;
-      }
-
-      return user;
-    });
+    return null;
   }
 
-  remove(id: string) {
-    this.users = this.users.filter( user => user.id !== id );
+  async remove(id: string) {
+    const user = await this.findOne(id);
+
+    if ( !user ) throw new NotFoundException(`No existe el usuario.`);
+
+    await this.userRepository.remove( user );
+
+    return `Usuario eliminado.`;
   }
 
   fillUsersWithSeedData( users: User[ ]) {
-    this.users = users;
+    return null;
   }
+
 }

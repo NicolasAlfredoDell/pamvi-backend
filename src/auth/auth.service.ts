@@ -1,17 +1,13 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 
-// UUID
-import { v4 as uuid } from 'uuid';
-
 // Dtos
-import { AuthDto } from './dto/auth.dto';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
-// Interfaces
-import { Auth } from './entities/auth.entity';
+// Entities
+import { User } from 'src/users/entities/user.entity';
 
 // TypeORM
 import { Repository } from 'typeorm';
@@ -22,16 +18,16 @@ export class AuthService {
     private readonly logger = new Logger('AuthService');
 
     constructor(
-        @InjectRepository(Auth)
-        private readonly authRepository: Repository<Auth>,
+        @InjectRepository(User)
+        private readonly authRepository: Repository<User>,
         private readonly configService: ConfigService,
     ) {}
 
-    async create(createAuthDto: CreateAuthDto) {
+    async create(createUserDto: CreateUserDto) {
         try {
-            const auth = this.authRepository.create(createAuthDto);
-            await this.authRepository.save( auth );
-            return auth;
+            const user = this.authRepository.create(createUserDto);
+            await this.authRepository.save( user );
+            return user;
         } catch (error) { this.handleDBException(error) }
     }
 
