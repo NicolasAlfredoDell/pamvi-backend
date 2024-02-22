@@ -24,10 +24,6 @@ export class UsersService {
     private readonly userRepository: Repository<User>, 
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
   async findAll( paginationDto: PaginationDto ) {
     const { limit = 10, offset = 0 } = paginationDto;
 
@@ -63,7 +59,6 @@ export class UsersService {
     } catch (error) {
       this.handleDBException(error);
     }
-
   }
 
   async remove(id: string) {
@@ -76,7 +71,39 @@ export class UsersService {
     return `Usuario eliminado.`;
   }
 
-  fillUsersWithSeedData( users: User[ ]) {
+  async disabled(id: string) {
+    const user = await this.userRepository.preload({
+      id: id,
+      disabled: true,
+    });
+
+    if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);
+
+    try {
+      await this.userRepository.save( user );
+      return user;
+    } catch (error) {
+      this.handleDBException(error);
+    }
+  }
+
+  async enabled(id: string) {
+    const user = await this.userRepository.preload({
+      id: id,
+      disabled: false,
+    });
+
+    if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);
+
+    try {
+      await this.userRepository.save( user );
+      return user;
+    } catch (error) {
+      this.handleDBException(error);
+    }
+  }
+
+  fillUsersWithSeedData(users: User[]) {
     return null;
   }
 

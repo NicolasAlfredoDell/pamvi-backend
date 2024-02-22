@@ -12,11 +12,6 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
-
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.usersService.findAll(paginationDto);
@@ -39,4 +34,15 @@ export class UsersController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.remove(id);
   }
+
+  @Patch('disabled/:id')
+  disabled(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.disabled(id);
+  }
+
+  @Delete('disabled/:id')
+  enabled(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.enabled(id);
+  }
+
 }
