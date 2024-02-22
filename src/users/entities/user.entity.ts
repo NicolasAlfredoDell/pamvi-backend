@@ -58,6 +58,7 @@ export class User {
     // FALTA GENERO
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
+    // AVATAR
 
     @BeforeInsert()
     setFullNameAndSlugInsert() {

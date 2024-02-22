@@ -1,8 +1,9 @@
-import { IsBoolean, IsDate, IsDateString, IsEmail, IsInt, IsNotEmpty, IsOptional,
+import { IsBoolean, IsDate, IsDateString, IsDefined, IsEmail, IsInt, IsNotEmpty, IsOptional,
     IsPositive, IsString, IsUrl, Matches, MaxLength, MinDate, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
+    @IsDefined({ message: 'El DNI debe estar definido' })
     @IsNotEmpty({ message: 'El DNI no puede estar vacío' })
     @IsString({ message: 'El DNI debe ser alfanumérico' })
     @Matches(/^[0-9]$/, { message: 'El DNI debe tener valores numéricos' })
@@ -10,14 +11,16 @@ export class CreateUserDto {
     @MinLength(7, { message: 'El DNI debe tener 7 dígitos o más' })
     dni: string;
 
+    @IsDefined({ message: 'La fecha de nacimiento debe estar definida' })
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })
     @IsDateString({}, { message: 'La fecha de nacimiento debe ser una cadena de caracteres válida' })
     @IsNotEmpty({ message: 'La fecha de nacimiento no puede estar vacía' })
     @MinDate(new Date(), { message: 'La fecha debe ser igual o posterior a la fecha actual' })
     birthday: Date;
 
-    @IsNotEmpty({ message: 'El correo no puede estar vacío' })
+    @IsDefined({ message: 'El correo debe estar definido' })
     @IsEmail()
+    @IsNotEmpty({ message: 'El correo no puede estar vacío' })
     email: string;
 
     @IsOptional()
@@ -28,11 +31,13 @@ export class CreateUserDto {
     @IsUrl()
     instagram?: string;
 
+    @IsDefined({ message: 'El apellido debe estar definido' })
     @IsNotEmpty({ message: 'El apellido no puede estar vacío' })
     @IsString()
     @Matches(/^[A-Za-z]+$/, { message: 'El apellido debe tener solo letras' })
     lastname: string;
 
+    @IsDefined({ message: 'El nombre debe estar definido' })
     @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
     @IsString()
     @Matches(/^[A-Za-z]+$/, { message: 'El apellido debe tener solo letras' })
@@ -46,19 +51,23 @@ export class CreateUserDto {
     @IsUrl()
     twitter?: string;
 
+    @IsDefined({ message: 'La edad debe estar definida' })
     @IsInt()
     @IsNotEmpty({ message: 'La edad no puede estar vacío' })
     @IsPositive()
     years: number;
 
+    @IsDefined({ message: 'El estado debe estar definido' })
     @IsBoolean()
     @IsNotEmpty({ message: 'El estado de deshabilitado no puede estar vacío' })
     disabled: boolean;
 
+    @IsDefined({ message: 'La fecha de cración debe estar definida' })
     @IsDateString()
     @IsNotEmpty({ message: 'La fecha de creación no puede estar vacío' })
     created_at: Date;
 
+    @IsDefined({ message: 'La feche de modificación debe estar definida' })
     @IsDateString()
     @IsOptional()
     updated_at: Date;
@@ -66,5 +75,6 @@ export class CreateUserDto {
     // FALTA GENERO
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
+    // AVATAR
 
 }
