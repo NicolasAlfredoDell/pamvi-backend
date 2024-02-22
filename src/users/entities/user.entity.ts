@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -60,28 +60,56 @@ export class User {
     // FALTA LOCACION
 
     @BeforeInsert()
-    setFullNameAndSlug() {
-        this.name = this.name.toLocaleLowerCase().trim();
-        this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
-
-        this.lastname = this.lastname.toLocaleLowerCase().trim();
-        this.lastname = this.lastname.charAt(0).toUpperCase() + this.lastname.slice(1);
-
-        this.slug = `${this.name}_${this.lastname}_${this.dni}`;
+    setFullNameAndSlugInsert() {
+        this.setFullNameAndSlug();
     }
 
     @BeforeInsert()
-    setCreatedAt() {
+    setCreatedAtInsert() {
         this.created_at = new Date();
     }
 
     @BeforeInsert()
-    setDisabled() {
+    setDisabledInsert() {
         this.disabled = false;
     }
 
     @BeforeInsert()
-    setYears() {
+    setYearsInsert() {
+        this.setYears();
+    }
+
+    @BeforeUpdate()
+    setFullNameAndSlugUpdate() {
+        this.setFullNameAndSlug();
+    }
+
+    @BeforeUpdate()
+    setCreatedAtUpdate() {
+        this.created_at = new Date();
+    }
+
+    @BeforeInsert()
+    setDisabledUpdate() {
+        this.disabled = false;
+    }
+
+    @BeforeInsert()
+    setYearsUpdate() {
+        this.setYears();
+    }
+
+    private setFullNameAndSlug(): void {
+        this.name = this.name.toLocaleLowerCase().trim();
+        this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
+    
+        this.lastname = this.lastname.toLocaleLowerCase().trim();
+        this.lastname = this.lastname.charAt(0).toUpperCase() + this.lastname.slice(1);
+    
+        this.slug = `${this.name}_${this.lastname}_${this.dni}`;
+    }
+
+    private setYears(): void {
         const today: Date = new Date();
         const birthdate: Date = new Date(this.birthday);
         

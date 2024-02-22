@@ -10,10 +10,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Modules
 import { AuthModule } from './auth/auth.module';
-import { SeedModule } from './seed/seed.module';
-import { UsersModule } from './users/users.module';
-import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
+import { CommonModule } from './common/common.module';
 import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
+import { SeedModule } from './seed/seed.module';
+import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -32,10 +33,11 @@ import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
       synchronize: true,
     }),
     AuthModule,
-    SeedModule,
-    UsersModule,
-    TypesOfUsersModule,
+    CommonModule,
     GenderOfUsersModule,
+    SeedModule,
+    TypesOfUsersModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

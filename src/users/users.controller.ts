@@ -1,7 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+
+// Dtos
 import { CreateUserDto } from './dto/create-user.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+
+// Services
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
@@ -13,17 +18,20 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.usersService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.findOne(id);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.usersService.findOne(term);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 
