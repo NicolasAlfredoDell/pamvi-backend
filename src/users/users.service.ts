@@ -8,7 +8,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 // Entites
-import { User } from './entities/user.entity';
+import { User, UserImage } from './entities';
 
 // Modules
 import { Repository } from 'typeorm';
@@ -21,7 +21,9 @@ export class UsersService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>, 
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserImage)
+    private readonly userImageRepository: Repository<UserImage>, 
   ) {}
 
   async findAll( paginationDto: PaginationDto ) {
@@ -46,9 +48,12 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    const { images = [], ...userDeatils } = updateUserDto;
+
     const user = await this.userRepository.preload({
       id: id,
-      ...updateUserDto
+      ...userDeatils,
+      avatar: images.map( ( image ) => this.userImageRepository.create({ url: image }) )
     });
 
     if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);

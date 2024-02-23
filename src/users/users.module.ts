@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersController } from './users.controller';
 
 // Entites
-import { User } from './entities/user.entity';
+import { User, UserImage } from './entities';
 
 // Modules
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -19,7 +19,7 @@ import { UsersService } from './users.service';
   providers: [UsersService],
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([ User ]),
+    TypeOrmModule.forFeature([ User, UserImage ]),
   ],
   exports: [
     TypeOrmModule.forFeature([ User ]),

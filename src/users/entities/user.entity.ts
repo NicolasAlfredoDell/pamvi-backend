@@ -1,4 +1,6 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+import { UserImage } from "./user-image.entity";
 
 @Entity()
 export class User {
@@ -58,7 +60,13 @@ export class User {
     // FALTA GENERO
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
-    // AVATAR
+    
+    @OneToMany(
+        () => UserImage,
+        (userImage) => userImage.user,
+        { cascade: true } 
+    )
+    avatar?: UserImage[];
 
     @BeforeInsert()
     setFullNameAndSlugInsert() {
@@ -100,7 +108,7 @@ export class User {
         this.setYears();
     }
 
-    private setFullNameAndSlug(): void {
+    setFullNameAndSlug(): void {
         this.name = this.name.toLocaleLowerCase().trim();
         this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
     
@@ -110,7 +118,7 @@ export class User {
         this.slug = `${this.name}_${this.lastname}_${this.dni}`;
     }
 
-    private setYears(): void {
+    setYears(): void {
         const today: Date = new Date();
         const birthdate: Date = new Date(this.birthday);
         

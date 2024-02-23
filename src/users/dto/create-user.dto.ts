@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsDateString, IsDefined, IsEmail, IsInt, IsNotEmpty, IsOptional,
+import { IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsEmail, IsInt, IsNotEmpty, IsOptional,
     IsPositive, IsString, IsUrl, Matches, MaxLength, MinDate, MinLength } from "class-validator";
 
 export class CreateUserDto {
@@ -72,9 +72,13 @@ export class CreateUserDto {
     @IsOptional()
     updated_at: Date;
 
+    @IsString({ each: true })
+    @IsArray()
+    @IsOptional()
+    images?: string[];
+
     // FALTA GENERO
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
-    // AVATAR
 
 }

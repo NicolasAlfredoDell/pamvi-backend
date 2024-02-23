@@ -18,9 +18,15 @@ export const USERS_SEED: User[] = [
         disabled: false,
         created_at: new Date(),
         updated_at: null,
+        setFullNameAndSlugInsert() {},
+        setCreatedAtInsert() {},
+        setDisabledInsert() {},
+        setYearsInsert() {},
+        setFullNameAndSlugUpdate() {},
+        setCreatedAtUpdate() {},
+        setDisabledUpdate() {},
+        setYearsUpdate() {},
         setFullNameAndSlug() {},
-        setCreatedAt() {},
-        setDisabled() {},
         setYears() {}
     }
 ];
