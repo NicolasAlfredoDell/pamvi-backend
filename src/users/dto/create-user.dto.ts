@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsEmail, IsInt, IsNotEmpty, IsOptional,
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsEmail, IsInt, IsNotEmpty, IsOptional,
     IsPositive, IsString, IsUrl, Matches, MaxLength, MinDate, MinLength } from "class-validator";
 
 export class CreateUserDto {
@@ -72,6 +72,8 @@ export class CreateUserDto {
     @IsOptional()
     updated_at: Date;
 
+    @ArrayMinSize(1)
+    @ArrayMaxSize(1)
     @IsString({ each: true })
     @IsArray()
     @IsOptional()
