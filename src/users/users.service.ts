@@ -11,7 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserImage } from './entities';
 
 // Modules
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { validate as isUUID } from 'uuid';
 
 @Injectable()
@@ -23,17 +23,47 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(UserImage)
-    private readonly userImageRepository: Repository<UserImage>, 
+    private readonly userImageRepository: Repository<UserImage>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAll( paginationDto: PaginationDto ) {
     const { limit = 10, offset = 0 } = paginationDto;
 
-    return await this.userRepository.find({
-      skip: offset,
+    const users = await this.userRepository.find({
       take: limit,
-    });
+      skip: offset,
+      relations: {
+        avatar: true,
+      }
+    })
+
+    return users.map( ( user ) => ({
+      ...user,
+      avatar: user.avatar.map( img => img.url )
+    }));
   }
+
+  // async create(createProductDto: CreateProductDto) {
+    
+  //   try {
+  //     const { images = [], ...productDetails } = createProductDto;
+
+  //     const product = this.productRepository.create({
+  //       ...productDetails,
+  //       images: images.map( image => this.productImageRepository.create({ url: image }) )
+  //     });
+      
+  //     await this.productRepository.save( product );
+
+  //     return { ...product, images };
+      
+  //   } catch (error) {
+  //     this.handleDBExceptions(error);
+  //   }
+
+
+  // }
 
   async findOne( term: string ) {
     let user: User;
@@ -44,24 +74,52 @@ export class UsersService {
 
     if ( !user ) throw new NotFoundException(`No existe el usuario con el termino ${term}.`);
 
-    return user
+    return user;
+  }
+
+  async findOnePlain( term: string ) {
+    const { avatar = [], ...rest } = await this.findOne( term );
+    
+    return {
+      ...rest,
+      images: avatar.map( avatar => avatar.url )
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     const { images = [], ...userDeatils } = updateUserDto;
 
     const user = await this.userRepository.preload({
-      id: id,
+      id,
       ...userDeatils,
-      avatar: images.map( ( image ) => this.userImageRepository.create({ url: image }) )
+      //? ESTO SIRVE PARA EL CREATE
+      //? avatar: images.map( ( image ) => this.userImageRepository.create({ url: image }) )
     });
 
     if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);
 
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
     try {
-      await this.userRepository.save( user );
+      if ( images ) {
+        await queryRunner.manager.delete(UserImage, { user: {id} });
+        user.avatar = images.map(image => this.userImageRepository.create({ url: image }));
+      } else {
+        
+      }
+
+      await queryRunner.manager.save( user );
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+
+      //* await this.userRepository.save( user );
       return user;
     } catch (error) {
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
+
       this.handleDBException(error);
     }
   }
@@ -112,10 +170,24 @@ export class UsersService {
     return null;
   }
 
+  async deleteAllProducts() {
+    const query = this.userRepository.createQueryBuilder('product');
+
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute();
+    } catch (error) {
+      this.handleDBException(error);
+    }
+  }
+
+
   private handleDBException(error: any) {
     if (error.code === '23505') throw new BadRequestException(error.detail);
     this.logger.error(error);
     throw new InternalServerErrorException(`Unexpected errors, check server logs`);
-}
+  }
 
 }
