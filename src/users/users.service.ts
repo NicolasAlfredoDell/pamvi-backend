@@ -44,26 +44,22 @@ export class UsersService {
     }));
   }
 
-  // async create(createProductDto: CreateProductDto) {
-    
-  //   try {
-  //     const { images = [], ...productDetails } = createProductDto;
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const { images = [], ...userDetails } = createUserDto;
 
-  //     const product = this.productRepository.create({
-  //       ...productDetails,
-  //       images: images.map( image => this.productImageRepository.create({ url: image }) )
-  //     });
+      const user = this.userRepository.create({
+        ...userDetails,
+        avatar: images.map( image => this.userImageRepository.create({ url: image }) )
+      });
       
-  //     await this.productRepository.save( product );
+      await this.userRepository.save( user );
 
-  //     return { ...product, images };
-      
-  //   } catch (error) {
-  //     this.handleDBExceptions(error);
-  //   }
-
-
-  // }
+      return { ...user, images };
+    } catch (error) {
+      this.handleDBException(error);
+    }
+  }
 
   async findOne( term: string ) {
     let user: User;
@@ -127,8 +123,6 @@ export class UsersService {
   async remove(id: string) {
     const user = await this.findOne(id);
 
-    if ( !user ) throw new NotFoundException(`No existe el usuario.`);
-
     await this.userRepository.remove( user );
 
     return `Usuario eliminado.`;
@@ -166,12 +160,8 @@ export class UsersService {
     }
   }
 
-  fillUsersWithSeedData(users: User[]) {
-    return null;
-  }
-
-  async deleteAllProducts() {
-    const query = this.userRepository.createQueryBuilder('product');
+  async deleteAllUsers() {
+    const query = this.userRepository.createQueryBuilder('user');
 
     try {
       return await query
@@ -182,7 +172,6 @@ export class UsersService {
       this.handleDBException(error);
     }
   }
-
 
   private handleDBException(error: any) {
     if (error.code === '23505') throw new BadRequestException(error.detail);
