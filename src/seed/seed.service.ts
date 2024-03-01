@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
+
+// Data
+import { initialData } from './data/seed-data';
+
+// Services
 import { UsersService } from '../users/users.service';
-import { USERS_SEED } from './data/user.seed';
 
 @Injectable()
 export class SeedService {
@@ -9,9 +13,22 @@ export class SeedService {
     private readonly usersService: UsersService,
   ) {}
   
-  populateDB() {
-    this.usersService.fillUsersWithSeedData( USERS_SEED );
+  async populateDB() {
+    await this.insertUsers();
+  
     return 'Seeds ejecutadas satisfactoriamente';
+  }
+
+  private async insertUsers() {
+    this.usersService.deleteAllUsers();
+
+    const users = initialData.users;
+
+    const insertPromise = [];
+
+    users.forEach( ( user ) => insertPromise.push(this.usersService.create(user)) );
+
+    await Promise.all( insertPromise );
   }
 
 }

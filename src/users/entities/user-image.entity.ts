@@ -14,6 +14,7 @@ export class UserImage {
     @ManyToOne(
         () => User,
         (user) => user.avatar,
+        { onDelete: 'CASCADE' }
     )
     user: User;
 
