@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // Modules
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { FilesModule } from './files/files.module';
 import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
 import { SeedModule } from './seed/seed.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
@@ -34,6 +35,7 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     CommonModule,
+    FilesModule,
     GenderOfUsersModule,
     SeedModule,
     TypesOfUsersModule,
