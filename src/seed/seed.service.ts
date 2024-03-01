@@ -8,14 +8,11 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class SeedService {
+  constructor(private readonly usersService: UsersService) {}
 
-  constructor(
-    private readonly usersService: UsersService,
-  ) {}
-  
   async populateDB() {
     await this.insertUsers();
-  
+
     return 'Seeds ejecutadas satisfactoriamente';
   }
 
@@ -26,9 +23,8 @@ export class SeedService {
 
     const insertPromise = [];
 
-    users.forEach( ( user ) => insertPromise.push(this.usersService.create(user)) );
+    users.forEach( (user) => insertPromise.push(this.usersService.create(user)) );
 
-    await Promise.all( insertPromise );
+    await Promise.all(insertPromise);
   }
-
 }

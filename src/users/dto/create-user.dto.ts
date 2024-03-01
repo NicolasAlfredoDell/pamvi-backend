@@ -70,7 +70,7 @@ export class CreateUserDto {
     @IsDefined({ message: 'La feche de modificación debe estar definida' })
     @IsDateString()
     @IsOptional()
-    updated_at: Date;
+    updated_at?: Date;
 
     @ArrayMinSize(1)
     @ArrayMaxSize(1)
