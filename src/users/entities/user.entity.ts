@@ -8,6 +8,9 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column('boolean')
+    disabled: boolean;
+
     @Column('text', {
         unique: true,
     })
@@ -38,6 +41,9 @@ export class User {
     name: string;
 
     @Column('text')
+    password: string;
+
+    @Column('text')
     slug: string;
 
     @Column('text', {
@@ -47,9 +53,6 @@ export class User {
 
     @Column('int')
     years: number;
-
-    @Column('boolean')
-    disabled: boolean;
 
     @Column('date')
     created_at: Date;

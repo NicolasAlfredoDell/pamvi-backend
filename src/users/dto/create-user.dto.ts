@@ -43,6 +43,15 @@ export class CreateUserDto {
     @Matches(/^[A-Za-z]+$/, { message: 'El apellido debe tener solo letras' })
     name: string;
 
+    @IsString()
+    @MinLength(6)
+    @MaxLength(50)
+    @Matches(
+        /(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+        message: 'La contraseñan debe tener al menos una mayúscula, una minúscula y un número'
+    })
+    password: string;
+
     @IsOptional()
     @IsString()
     slug?: string;
