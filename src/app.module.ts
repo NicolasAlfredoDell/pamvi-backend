@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { join } from 'path';
+
 import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Config
 import { EnvConfiguration } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.validation';
-
-// Externals Modules
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Modules
 import { AuthModule } from './auth/auth.module';
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module';
       load: [ EnvConfiguration ],
       validationSchema: JoiValidationSchema,
     }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -33,6 +35,11 @@ import { UsersModule } from './users/users.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
+
     AuthModule,
     CommonModule,
     FilesModule,
