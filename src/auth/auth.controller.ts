@@ -2,6 +2,7 @@ import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, UsePipes, Validati
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LoginUserDto } from './entities/login-user.entity';
 
 // Services
 import { AuthService } from './auth.service';
@@ -13,12 +14,11 @@ export class AuthController {
         private readonly authService: AuthService,
     ) { }
 
-    @Post(':id')
+    @Post()
     login(
-        @Body() createUserDto: CreateUserDto,
-        @Param('id', new ParseUUIDPipe({ version: '4' }) ) id: string,
+        @Body() loginUserDto: LoginUserDto,
     ) {
-        
+        return this.authService.login(loginUserDto);
     }
 
     @Patch()
@@ -27,8 +27,10 @@ export class AuthController {
     }
 
     @Post()
-    register( @Body() createUserDto: CreateUserDto ) {
-        return this.authService.create(createUserDto);
+    register(
+        @Body() createUserDto: CreateUserDto,
+    ) {
+        return this.authService.register(createUserDto);
     }
 
     @Post()

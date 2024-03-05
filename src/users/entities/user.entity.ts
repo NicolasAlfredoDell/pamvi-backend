@@ -8,7 +8,9 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('boolean')
+    @Column('boolean', {
+        default: false,
+    })
     disabled: boolean;
 
     @Column('text', {
@@ -40,7 +42,9 @@ export class User {
     @Column('text')
     name: string;
 
-    @Column('text')
+    @Column('text', {
+        select: false,
+    })
     password: string;
 
     @Column('text')
