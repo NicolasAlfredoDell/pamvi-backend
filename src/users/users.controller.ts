@@ -22,6 +22,7 @@ import { ValidRoles } from './interfaces/valid-roles.interface';
 // Services
 import { UsersService } from './users.service';
 import { IncomingHttpHeaders } from 'http';
+import { Auth } from './decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -51,21 +52,29 @@ export class UsersController {
   }
 
   @Patch('disabled/:id')
-  @UseGuards(AuthGuard())
   disabled(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.disabled(id);
   }
 
   @Delete('disabled/:id')
-  @RoleProtected(ValidRoles.superUser)
-  @UseGuards(AuthGuard(), UserRoleGuard)
+  @Auth(ValidRoles.superUser, ValidRoles.admin)
   enabled(
     @GetUser() user: User,
-    @GetUser('email') userEmail: string,
-    @Headers() headers: IncomingHttpHeaders,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.usersService.enabled(id);
   }
+
+  // @Delete('disabled/:id')
+  // @RoleProtected(ValidRoles.superUser)
+  // @UseGuards(AuthGuard(), UserRoleGuard)
+  // enabled(
+  //   @GetUser() user: User,
+  //   @GetUser('email') userEmail: string,
+  //   @Headers() headers: IncomingHttpHeaders,
+  //   @Param('id', ParseUUIDPipe) id: string,
+  // ) {
+  //   return this.usersService.enabled(id);
+  // }
 
 }
