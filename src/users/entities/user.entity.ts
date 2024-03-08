@@ -77,7 +77,7 @@ export class User {
 
     @BeforeInsert()
     setFullNameAndSlugInsert() {
-        this.setFullNameAndSlug();
+        this.setFullNameAndSlugAndEmail();
     }
 
     @BeforeInsert()
@@ -97,7 +97,7 @@ export class User {
 
     @BeforeUpdate()
     setFullNameAndSlugUpdate() {
-        this.setFullNameAndSlug();
+        this.setFullNameAndSlugAndEmail();
     }
 
     @BeforeUpdate()
@@ -115,12 +115,14 @@ export class User {
         this.setYears();
     }
 
-    setFullNameAndSlug(): void {
+    setFullNameAndSlugAndEmail(): void {
         this.name = this.name.toLocaleLowerCase().trim();
         this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
     
         this.lastname = this.lastname.toLocaleLowerCase().trim();
         this.lastname = this.lastname.charAt(0).toUpperCase() + this.lastname.slice(1);
+
+        this.email = this.email.toLocaleLowerCase().trim();
     
         this.slug = `${this.name}_${this.lastname}_${this.dni}`;
     }
