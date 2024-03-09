@@ -2,7 +2,7 @@ import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, UsePipes, Validati
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { LoginUserDto } from './entities/login-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 // Services
 import { AuthService } from './auth.service';

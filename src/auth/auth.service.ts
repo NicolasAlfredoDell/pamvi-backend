@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { LoginUserDto } from './entities/login-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 // Entities
 import { User } from 'src/users/entities/user.entity';

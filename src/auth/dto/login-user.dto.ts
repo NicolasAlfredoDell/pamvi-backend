@@ -2,13 +2,13 @@ import { IsDefined, IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength
 
 export class LoginUserDto {
 
-    @IsDefined({ message: 'Debe definir un correo.' })
+    @IsDefined({ message: 'Debe enviar un correo.' })
     @IsEmail({}, { message: 'Ingrese un correo válido.' })
     @IsNotEmpty({ message: 'Debe ingresar un correo.' })
     @IsString({ message: 'El correo debe estar compuesto de caracteres.' })
     email: string;
 
-    @IsDefined({ message: 'Debe definir una contraseña.' })
+    @IsDefined({ message: 'Debe enviar una contraseña.' })
     @IsNotEmpty({ message: 'Debe ingresar una contraseña.' })
     @IsString({ message: 'La contraseña debe estar compuesta de caracteres.' })
     @MinLength(6, { message: 'La contraseña debe tener 6 omás caracteres.' })
