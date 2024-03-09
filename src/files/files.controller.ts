@@ -11,18 +11,18 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-
+import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 // Helpers
 import { fileFilter, fileNamer } from './helpers';
 
 // Services
-import { ConfigService } from '@nestjs/config';
 import { FilesService } from './files.service';
 
 @Controller('files')
 export class FilesController {
+
   constructor(
     private readonly filesService: FilesService,
     private readonly configService: ConfigService,
@@ -34,12 +34,11 @@ export class FilesController {
     @Param('fileName') fileName: string,
   ) {
     const path = this.filesService.getStaticFile(fileName);
-
     res.sendFile(path);
   } 
 
   @Post('files')
-  @UseInterceptors(FileInterceptor('file', {
+  @UseInterceptors( FileInterceptor('file', {
     fileFilter: fileFilter,
     // limits: { fileSize: 10000 },
     storage: diskStorage({

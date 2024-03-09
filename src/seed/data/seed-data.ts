@@ -1,28 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
-// Entites
-import { UserImage } from 'src/users/entities';
-
-interface SeedUser {
-    dni: string;
-    birthday: Date;
-    email: string;
-    facebook?: string;
-    instagram?: string;
-    lastname: string;
-    name: string;
-    slug: string;
-    twitter?: string;
-    years: number;
-    disabled: boolean;
-    created_at: Date;
-    updated_at?: Date;
-    avatar?: UserImage[];
-}
-
-interface SeedData {
-    users: SeedUser[],
-}
+// Interfaces
+import { SeedData } from '../interfaces/seed-data.interface';
 
 export const initialData: SeedData = {
     users: [

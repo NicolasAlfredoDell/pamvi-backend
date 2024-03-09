@@ -6,4 +6,7 @@ export const EnvConfiguration = () => ({
     dbPort: process.env.DB_PORT || 5432,
     dbUsername: process.env.DB_USERNAME || 'postgres',
     defaultLimit: +process.env.DEFAULT_LIMIT || 5,
+    port: +process.env.PORT,
+    hostApi: process.env.HOST_API,
+    jwtSecret: process.env.JWT_SECRET,
 });

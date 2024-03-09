@@ -1,12 +1,22 @@
 import { Module } from '@nestjs/common';
-import { SeedService } from './seed.service';
+
+// Controllers
 import { SeedController } from './seed.controller';
-import { UsersModule } from 'src/users/users.module';
+
+// Modules
 import { AuthModule } from 'src/auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
+
+// Services
+import { SeedService } from './seed.service';
 
 @Module({
-  controllers: [SeedController],
-  providers: [SeedService],
+  controllers: [
+    SeedController,
+  ],
+  providers: [
+    SeedService,
+  ],
   imports: [
     AuthModule,
     UsersModule,

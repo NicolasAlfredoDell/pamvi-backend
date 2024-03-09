@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 
@@ -8,16 +9,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { LoginUserDto } from './entities/login-user.entity';
+import { LoginUserDto } from './entities/login-user.dto';
 
 // Entities
 import { User } from 'src/users/entities/user.entity';
 
 // interfaces
 import { JwtPayload } from './interfaces/jwt-payload.interfaces';
-
-// TypeORM
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -27,13 +25,17 @@ export class AuthService {
     constructor(
         @InjectRepository(User)
         private readonly authRepository: Repository<User>,
-        private readonly configService: ConfigService,
-        private readonly jwtService: JwtService,
+        
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+
+        private readonly configService: ConfigService,
+        private readonly jwtService: JwtService,
     ) {}
 
-    async login(loginUserDto: LoginUserDto) {
+    async login(
+        loginUserDto: LoginUserDto,
+    ) {
         const { password, email } = loginUserDto;
 
         const user = await this.userRepository.findOne({
@@ -41,12 +43,12 @@ export class AuthService {
             select: { email: true, password: true, id: true },
         });
 
-        if ( !user || !bcrypt.compareSync(password, user.password) )
+        if ( !user || !bcrypt.compareSync( password, user.password ) )
             throw new UnauthorizedException('Usuario y/o contraseña incorrectas');
 
         return {
-            ...user,
-            token: this.getJWT({ id: user.id })
+            message: 'Logueado correctamente.',
+            token: this.getJWT({ id: user.id, email: user.email, }),
         };
     }
 
@@ -64,19 +66,25 @@ export class AuthService {
 
             return {
                 ...user,
-                token: this.getJWT({ id: user.id })
+                token: this.getJWT({ id: user.id, email: user.email })
             };
         } catch (error) { this.handleDBException(error) }
     }
 
-    private getJWT( payload: JwtPayload ) {
+    private getJWT(
+        payload: JwtPayload,
+    ): string {
         return this.jwtService.sign(payload);
     }
 
-    private handleDBException(error: any): never {
-        if (error.code === '23505') throw new BadRequestException(error.detail);
+    private handleDBException(
+        error: any,
+    ): never {
+        if (error.code === '23505')
+            throw new BadRequestException(error.detail);
+        
         this.logger.error(error);
-        throw new InternalServerErrorException(`Unexpected errors, check server logs`);
+        throw new InternalServerErrorException(`Error inesperado, verifique los logs`);
     }
 
 }

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-// Controllers
-import { AuthController } from './auth.controller';
-
-// Modules externals
+// External modules
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+// Controllers
+import { AuthController } from './auth.controller';
 
 // Services
 import { AuthService } from './auth.service';
@@ -17,14 +17,23 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  controllers: [
+    AuthController,
+  ],
+  providers: [
+    AuthService,
+    JwtStrategy,
+  ],
   imports: [
     ConfigModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
+      imports: [
+        ConfigModule,
+      ],
+      inject: [
+        ConfigService,
+      ],
       useFactory: ( configService: ConfigService ) => {
         return {
           secret: configService.get('JWT_SECRET'),

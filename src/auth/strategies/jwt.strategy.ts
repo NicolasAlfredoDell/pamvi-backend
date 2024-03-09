@@ -1,17 +1,16 @@
-// Modules
-import { Repository } from "typeorm";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Repository } from 'typeorm';
 
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { PassportStrategy } from "@nestjs/passport";
+import { PassportStrategy } from '@nestjs/passport';
+import { InjectRepository } from '@nestjs/typeorm';
 
 // Entities
-import { User } from "src/users/entities";
+import { User } from 'src/users/entities';
 
 // Interfaces
-import { JwtPayload } from "../interfaces/jwt-payload.interfaces";
+import { JwtPayload } from '../interfaces/jwt-payload.interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy( Strategy ) {
@@ -20,7 +19,7 @@ export class JwtStrategy extends PassportStrategy( Strategy ) {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
 
-        configService: ConfigService
+        configService: ConfigService,
     ) {
         super({
             secretOrKey: configService.get('JWT_SECRET'),
@@ -33,7 +32,7 @@ export class JwtStrategy extends PassportStrategy( Strategy ) {
 
         const user = await this.userRepository.findOneBy({email});
 
-        if ( !user ) throw new UnauthorizedException('Token no valido');
+        if ( !user ) throw new UnauthorizedException('Token no válido');
         if ( user.disabled ) throw new UnauthorizedException('Usuario inhabilitado');
 
         return user;
