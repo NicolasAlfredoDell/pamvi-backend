@@ -10,6 +10,7 @@ export interface SeedUser {
     instagram?: string;
     lastname: string;
     name: string;
+    password: string;
     slug: string;
     twitter?: string;
     years: number;

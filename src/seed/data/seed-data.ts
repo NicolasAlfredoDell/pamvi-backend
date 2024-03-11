@@ -13,6 +13,7 @@ export const initialData: SeedData = {
             instagram: 'https://www.instagram.com/dellnicoo/',
             lastname: 'Dell',
             name: 'Nicolas',
+            password: '123',
             slug: 'Nicolas_Dell_36302765',
             twitter: 'https://twitter.com/dellnicoo',
             years: 31,

@@ -1,20 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UseGuards, Headers } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 
 // Decorators
 import { GetUser } from './decorators/get-user.decorator';
-import { RoleProtected } from './decorators/role-protected.decorator';
 
 // Dtos
-import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 // Entities
 import { User } from './entities';
-
-// Guards
-import { UserRoleGuard } from './guards/user-role/user-role.guard';
 
 // Interfaces
 import { ValidRoles } from './interfaces/valid-roles.interface';
