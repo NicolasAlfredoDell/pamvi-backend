@@ -54,10 +54,10 @@ export class AuthService {
 
     async register(createUserDto: CreateUserDto) {
         try {
-            const { password, ...userDetail } = createUserDto;
+            const { password, ...userDetails } = createUserDto;
             
             const user = this.authRepository.create({
-                ...userDetail,
+                ...userDetails,
                 password: bcrypt.hashSync(password, 10)
             });
 

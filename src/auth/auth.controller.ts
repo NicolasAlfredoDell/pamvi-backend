@@ -26,7 +26,7 @@ export class AuthController {
         
     }
 
-    @Post()
+    @Post('register')
     register(
         @Body() createUserDto: CreateUserDto,
     ) {

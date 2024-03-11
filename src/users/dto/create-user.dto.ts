@@ -1,22 +1,28 @@
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsEmail, IsInt, IsNotEmpty, IsOptional,
-    IsPositive, IsString, IsUrl, Matches, MaxLength, MinDate, MinLength } from "class-validator";
+    IsPositive, IsString, IsUrl, Matches, MaxDate, MaxLength, MinDate, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
+    @IsDefined({ message: 'La fecha de nacimiento debe estar definida' })
+    // @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })
+    // @IsDateString({}, { message: 'La fecha de nacimiento debe ser una cadena de caracteres válida' })
+    @IsNotEmpty({ message: 'La fecha de nacimiento no puede estar vacía' })
+    // @MaxDate(new Date('2006-01-01'), { message: 'La fecha debe ser igual o anterior al año 2006' })
+    // @MinDate(new Date('1920-01-01'), { message: 'La fecha debe ser igual o posterior al año 1920' })
+    birthday: Date;
+
+    @IsDefined({ message: 'El estado debe estar definido' })
+    @IsBoolean()
+    @IsNotEmpty({ message: 'El estado de deshabilitado no puede estar vacío' })
+    disabled: boolean;
+
     @IsDefined({ message: 'El DNI debe estar definido' })
     @IsNotEmpty({ message: 'El DNI no puede estar vacío' })
-    @IsString({ message: 'El DNI debe ser alfanumérico' })
-    @Matches(/^[0-9]$/, { message: 'El DNI debe tener valores numéricos' })
-    @MaxLength(8, { message: 'El DNI debe tener hasta 8 dígitos' })
+    @IsString({ message: 'El DNI debe tener valores numéricos' })
+    @Matches(/^[0-9]+$/, { message: 'El DNI solo acepta valores numéricos' })
+    @MaxLength(8, { message: 'El DNI debe tener hasta 8 dígitos o menos' })
     @MinLength(7, { message: 'El DNI debe tener 7 dígitos o más' })
     dni: string;
-
-    @IsDefined({ message: 'La fecha de nacimiento debe estar definida' })
-    @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })
-    @IsDateString({}, { message: 'La fecha de nacimiento debe ser una cadena de caracteres válida' })
-    @IsNotEmpty({ message: 'La fecha de nacimiento no puede estar vacía' })
-    @MinDate(new Date(), { message: 'La fecha debe ser igual o posterior a la fecha actual' })
-    birthday: Date;
 
     @IsDefined({ message: 'El correo debe estar definido' })
     @IsEmail()
@@ -26,6 +32,13 @@ export class CreateUserDto {
     @IsOptional()
     @IsUrl()
     facebook?: string;
+
+    @ArrayMinSize(1)
+    @ArrayMaxSize(1)
+    @IsString({ each: true })
+    @IsArray()
+    @IsOptional()
+    images?: string[];
 
     @IsOptional()
     @IsUrl()
@@ -53,10 +66,6 @@ export class CreateUserDto {
     password: string;
 
     @IsOptional()
-    @IsString()
-    slug?: string;
-
-    @IsOptional()
     @IsUrl()
     twitter?: string;
 
@@ -65,28 +74,6 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'La edad no puede estar vacío' })
     @IsPositive()
     years: number;
-
-    @IsDefined({ message: 'El estado debe estar definido' })
-    @IsBoolean()
-    @IsNotEmpty({ message: 'El estado de deshabilitado no puede estar vacío' })
-    disabled: boolean;
-
-    @IsDefined({ message: 'La fecha de cración debe estar definida' })
-    @IsDateString()
-    @IsNotEmpty({ message: 'La fecha de creación no puede estar vacío' })
-    created_at: Date;
-
-    @IsDefined({ message: 'La feche de modificación debe estar definida' })
-    @IsDateString()
-    @IsOptional()
-    updated_at?: Date;
-
-    @ArrayMinSize(1)
-    @ArrayMaxSize(1)
-    @IsString({ each: true })
-    @IsArray()
-    @IsOptional()
-    images?: string[];
 
     // FALTA GENERO
     // FALTA TIPO DE USUARIO
