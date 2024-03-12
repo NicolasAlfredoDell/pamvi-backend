@@ -5,31 +5,41 @@ import { UserImage } from "./user-image.entity";
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @OneToMany(
+        () => UserImage,
+        (userImage) => userImage.user,
+        { cascade: true }
+    )
+    avatar?: UserImage[];
 
+    @Column('date')
+    birthday: Date;
+    
     @Column('boolean', {
-        default: false,
+        default: true,
     })
     disabled: boolean;
+
+    @Column('timestamp')
+    created_at: Date;
 
     @Column('text', {
         unique: true,
     })
     dni: string;
 
-    @Column('date')
-    birthday: Date;
-
     @Column('text', {
         unique: true,
     })
     email: string;
-
+    
     @Column('text', {
         nullable: true,
     })
     facebook: string;
+
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column('text', {
         nullable: true,
@@ -37,10 +47,10 @@ export class User {
     instagram: string;
 
     @Column('text')
-    lastname: string;
+    lastnames: string;
 
     @Column('text')
-    name: string;
+    names: string;
 
     @Column('text', {
         select: false,
@@ -55,25 +65,15 @@ export class User {
     })
     twitter: string;
 
+    @Column('timestamp')
+    updated_at: Date;
+
     @Column('int')
     years: number;
-
-    @Column('date')
-    created_at: Date;
-
-    @Column('date')
-    updated_at: Date;
 
     // FALTA GENERO
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
-    
-    @OneToMany(
-        () => UserImage,
-        (userImage) => userImage.user,
-        { cascade: true } 
-    )
-    avatar?: UserImage[];
 
     @BeforeInsert()
     setFullNameAndSlugInsert() {
@@ -81,13 +81,9 @@ export class User {
     }
 
     @BeforeInsert()
-    setCreatedAtInsert() {
+    setCreatedAtAndUpdateAtInsert() {
         this.created_at = new Date();
-    }
-
-    @BeforeInsert()
-    setDisabledInsert() {
-        this.disabled = false;
+        this.updated_at = new Date();
     }
 
     @BeforeInsert()
@@ -102,12 +98,7 @@ export class User {
 
     @BeforeUpdate()
     setCreatedAtUpdate() {
-        this.created_at = new Date();
-    }
-
-    @BeforeInsert()
-    setDisabledUpdate() {
-        this.disabled = false;
+        this.updated_at = new Date();
     }
 
     @BeforeInsert()
@@ -116,15 +107,15 @@ export class User {
     }
 
     setFullNameAndSlugAndEmail(): void {
-        this.name = this.name.toLocaleLowerCase().trim();
-        this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
+        this.names = this.names.trim();
+        this.names = this.names.charAt(0).toUpperCase() + this.names.slice(1);
     
-        this.lastname = this.lastname.toLocaleLowerCase().trim();
-        this.lastname = this.lastname.charAt(0).toUpperCase() + this.lastname.slice(1);
+        this.lastnames = this.lastnames.trim();
+        this.lastnames = this.lastnames.charAt(0).toUpperCase() + this.lastnames.slice(1);
 
         this.email = this.email.toLocaleLowerCase().trim();
     
-        this.slug = `${this.name}_${this.lastname}_${this.dni}`;
+        this.slug = `${this.names.replace(' ', '_')}_${this.lastnames}_${this.dni}`;
     }
 
     setYears(): void {

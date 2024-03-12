@@ -8,8 +8,8 @@ export interface SeedUser {
     email: string;
     facebook?: string;
     instagram?: string;
-    lastname: string;
-    name: string;
+    lastnames: string;
+    names: string;
     password: string;
     slug: string;
     twitter?: string;

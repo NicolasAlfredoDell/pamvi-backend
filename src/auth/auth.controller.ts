@@ -14,17 +14,17 @@ export class AuthController {
         private readonly authService: AuthService,
     ) { }
 
-    @Post()
+    @Post('login')
     login(
         @Body() loginUserDto: LoginUserDto,
     ) {
         return this.authService.login(loginUserDto);
     }
 
-    @Patch()
-    recoveryPassword() {
+    // @Patch()
+    // recoveryPassword() {
         
-    }
+    // }
 
     @Post('register')
     register(
@@ -33,9 +33,9 @@ export class AuthController {
         return this.authService.register(createUserDto);
     }
 
-    @Post()
-    sendMailForRecoveryPassword() {
+    // @Post()
+    // sendMailForRecoveryPassword() {
         
-    }
+    // }
 
 }

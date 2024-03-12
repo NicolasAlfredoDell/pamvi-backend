@@ -8,7 +8,9 @@ export class UserImage {
     @PrimaryGeneratedColumn('uuid')
     id: number;
 
-    @Column('text')
+    @Column('text',{
+        unique: true
+    })
     url: string;
 
     @ManyToOne(
