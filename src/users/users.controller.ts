@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 
 // Decorators
 import { Auth } from './decorators/user.decorator';
@@ -25,19 +25,20 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
-  // @Get()
-  // findAll(
-  //   @Query() paginationDto: PaginationDto,
-  // ) {
-  //   return this.usersService.findAll(paginationDto);
-  // }
+  @Get()
+  @UsePipes(ValidationPipe)
+  findAll(
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.usersService.findAll(paginationDto);
+  }
 
-  // @Get(':term')
-  // findOne(
-  //   @Param('term') term: string,
-  // ) {
-  //   return this.usersService.findOne(term);
-  // }
+  @Get(':term')
+  findOne(
+    @Param('term') term: string,
+  ) {
+    return this.usersService.findOne(term);
+  }
 
   // @Patch(':id')
   // update(

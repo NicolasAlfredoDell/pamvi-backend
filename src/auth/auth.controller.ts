@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -15,6 +15,7 @@ export class AuthController {
     ) { }
 
     @Post('login')
+    @UsePipes(ValidationPipe)
     login(
         @Body() loginUserDto: LoginUserDto,
     ) {
@@ -27,6 +28,7 @@ export class AuthController {
     // }
 
     @Post('register')
+    @UsePipes(ValidationPipe)
     register(
         @Body() createUserDto: CreateUserDto,
     ) {

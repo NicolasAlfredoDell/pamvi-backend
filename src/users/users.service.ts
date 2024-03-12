@@ -27,7 +27,9 @@ export class UsersService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async findAll( paginationDto: PaginationDto ) {
+  async findAll(
+    paginationDto: PaginationDto,
+  ) {
     const { limit = 10, offset = 0 } = paginationDto;
 
     const users = await this.userRepository.find({
@@ -35,13 +37,18 @@ export class UsersService {
       skip: offset,
       relations: {
         avatar: true,
-      }
-    })
+      },
+    });
 
-    return users.map( ( user ) => ({
-      ...user,
-      avatar: user.avatar.map( img => img.url )
-    }));
+    return {
+      totals: await this.userRepository.count(),
+      users: users.map(
+        ( user ) => ({
+          ...user,
+          avatar: user.avatar.map( img => img.url )
+        })
+      )
+    }
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -61,14 +68,23 @@ export class UsersService {
     }
   }
 
-  async findOne( term: string ) {
+  async findOne(
+    term: string,
+  ) {
     let user: User;
 
     isUUID(term)
       ? user = await this.userRepository.findOneBy({ id: term })
-      : user = await this.userRepository.findOneBy({ slug: term });
+      : user = await this.userRepository
+                        .createQueryBuilder('user')
+                        .where('user.dni = :term OR user.email = :term', { term })
+                        .getOne();
 
-    if ( !user ) throw new NotFoundException(`No existe el usuario con el termino ${term}.`);
+    if ( !user )
+      throw new NotFoundException(`No existe el usuario.`);
+
+    if ( user.disabled )
+      throw new NotFoundException(`El usuario está deshabilitado.`);
 
     return user;
   }
@@ -173,9 +189,13 @@ export class UsersService {
     }
   }
 
-  private handleDBException(error: any) {
-    if (error.code === '23505') throw new BadRequestException(error.detail);
-    this.logger.error(error);
+  private handleDBException(
+    error: any,
+  ) {
+    if (error.code === '23505')
+      throw new BadRequestException(error.detail);
+    
+      this.logger.error(error);
     throw new InternalServerErrorException(`Unexpected errors, check server logs`);
   }
 
