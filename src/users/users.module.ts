@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 
 // Controllers
 import { UsersController } from './users.controller';
@@ -19,6 +20,7 @@ import { UsersService } from './users.service';
   providers: [UsersService],
   imports: [
     ConfigModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     TypeOrmModule.forFeature([ User, UserImage ]),
   ],
   exports: [
