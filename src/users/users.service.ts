@@ -27,6 +27,43 @@ export class UsersService {
     private readonly dataSource: DataSource,
   ) {}
 
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const { images = [], ...userDetails } = createUserDto;
+
+      const user = this.userRepository.create({
+        ...userDetails,
+        avatar: images.map( image => this.userImageRepository.create({ url: image }) )
+      });
+      
+      await this.userRepository.save( user );
+
+      return { ...user, images };
+    } catch (error) {
+      this.handleDBException(error);
+    }
+  }
+
+  async disabled(
+    id: string,
+  ) {
+    const user = await this.userRepository.preload({
+      id: id,
+      disabled: true,
+    });
+
+    if ( !user )
+      throw new NotFoundException(`El usuario no existe.`);
+
+    try {
+      await this.userRepository.save( user );
+
+      return {
+        message: 'Se deshabilito al usuario',
+      };
+    } catch (error) { this.handleDBException(error) }
+  }
+
   async findAll(
     paginationDto: PaginationDto,
   ) {
@@ -48,23 +85,6 @@ export class UsersService {
           avatar: user.avatar.map( img => img.url )
         })
       )
-    }
-  }
-
-  async create(createUserDto: CreateUserDto) {
-    try {
-      const { images = [], ...userDetails } = createUserDto;
-
-      const user = this.userRepository.create({
-        ...userDetails,
-        avatar: images.map( image => this.userImageRepository.create({ url: image }) )
-      });
-      
-      await this.userRepository.save( user );
-
-      return { ...user, images };
-    } catch (error) {
-      this.handleDBException(error);
     }
   }
 
@@ -144,22 +164,6 @@ export class UsersService {
     return `Usuario eliminado.`;
   }
 
-  async disabled(id: string) {
-    const user = await this.userRepository.preload({
-      id: id,
-      disabled: true,
-    });
-
-    if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);
-
-    try {
-      await this.userRepository.save( user );
-      return user;
-    } catch (error) {
-      this.handleDBException(error);
-    }
-  }
-
   async enabled(id: string) {
     const user = await this.userRepository.preload({
       id: id,
@@ -195,8 +199,8 @@ export class UsersService {
     if (error.code === '23505')
       throw new BadRequestException(error.detail);
     
-      this.logger.error(error);
-    throw new InternalServerErrorException(`Unexpected errors, check server logs`);
+    this.logger.error(error);
+    throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);
   }
 
 }
