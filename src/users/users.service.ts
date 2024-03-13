@@ -1,18 +1,15 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { validate as isUUID } from 'uuid';
 
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 // Entites
 import { User, UserImage } from './entities';
-
-// Modules
-import { DataSource, Repository } from 'typeorm';
-import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -27,7 +24,9 @@ export class UsersService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(
+    createUserDto: CreateUserDto,
+  ) {
     try {
       const { images = [], ...userDetails } = createUserDto;
 
@@ -39,9 +38,7 @@ export class UsersService {
       await this.userRepository.save( user );
 
       return { ...user, images };
-    } catch (error) {
-      this.handleDBException(error);
-    }
+    } catch (error) { this.handleDBException(error) }
   }
 
   async disabled(
@@ -60,6 +57,26 @@ export class UsersService {
 
       return {
         message: 'Se deshabilito al usuario',
+      };
+    } catch (error) { this.handleDBException(error) }
+  }
+
+  async enabled(
+    id: string,
+  ) {
+    const user = await this.userRepository.preload({
+      id: id,
+      disabled: false,
+    });
+
+    if ( !user )
+      throw new NotFoundException(`El usuario no existe.`);
+
+    try {
+      await this.userRepository.save( user );
+
+      return {
+        message: 'Se habilitó al usuario',
       };
     } catch (error) { this.handleDBException(error) }
   }
@@ -103,9 +120,6 @@ export class UsersService {
     if ( !user )
       throw new NotFoundException(`No existe el usuario.`);
 
-    if ( user.disabled )
-      throw new NotFoundException(`El usuario está deshabilitado.`);
-
     return user;
   }
 
@@ -118,7 +132,10 @@ export class UsersService {
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ) {
     const { images = [], ...userDeatils } = updateUserDto;
 
     const user = await this.userRepository.preload({
@@ -128,7 +145,8 @@ export class UsersService {
       //? avatar: images.map( ( image ) => this.userImageRepository.create({ url: image }) )
     });
 
-    if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);
+    if ( !user )
+      throw new NotFoundException(`El usuario no existe.`);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -136,18 +154,19 @@ export class UsersService {
 
     try {
       if ( images ) {
-        await queryRunner.manager.delete(UserImage, { user: {id} });
-        user.avatar = images.map(image => this.userImageRepository.create({ url: image }));
-      } else {
-        
+        await queryRunner.manager.delete( UserImage, { user: {id} } );
+        user.avatar = images.map( image => this.userImageRepository.create({ url: image }) );
       }
 
-      await queryRunner.manager.save( user );
+      await queryRunner.manager.save(user);
       await queryRunner.commitTransaction();
       await queryRunner.release();
 
-      //* await this.userRepository.save( user );
-      return user;
+      await this.userRepository.save( user );
+
+      return {
+        message: `Usuario modificado correctamente.`,
+      };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       await queryRunner.release();
@@ -156,28 +175,26 @@ export class UsersService {
     }
   }
 
-  async remove(id: string) {
-    const user = await this.findOne(id);
-
-    await this.userRepository.remove( user );
-
-    return `Usuario eliminado.`;
+  private handleDBException(
+    error: any,
+  ) {
+    if (error.code === `23505`)
+      throw new BadRequestException(error.detail);
+    
+    this.logger.error(error);
+    throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);
   }
 
-  async enabled(id: string) {
-    const user = await this.userRepository.preload({
-      id: id,
-      disabled: false,
-    });
-
-    if ( !user ) throw new NotFoundException(`Usuario con el id no existe.`);
+  async remove(
+    id: string,
+  ) {
+    const user = await this.findOne(id);
 
     try {
-      await this.userRepository.save( user );
-      return user;
-    } catch (error) {
-      this.handleDBException(error);
-    }
+      await this.userRepository.remove( user );
+  
+      return `Usuario eliminado.`;
+    } catch (error) { this.handleDBException(error) }
   }
 
   async deleteAllUsers() {
@@ -188,19 +205,7 @@ export class UsersService {
         .delete()
         .where({})
         .execute();
-    } catch (error) {
-      this.handleDBException(error);
-    }
-  }
-
-  private handleDBException(
-    error: any,
-  ) {
-    if (error.code === '23505')
-      throw new BadRequestException(error.detail);
-    
-    this.logger.error(error);
-    throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);
+    } catch (error) { this.handleDBException(error) }
   }
 
 }

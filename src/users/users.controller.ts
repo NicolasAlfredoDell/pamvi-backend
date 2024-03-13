@@ -40,14 +40,6 @@ export class UsersController {
     return this.usersService.findOne(term);
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id', ParseUUIDPipe) id: string,
-  //   @Body() updateUserDto: UpdateUserDto,
-  // ) {
-  //   return this.usersService.update(id, updateUserDto);
-  // }
-
   // @Delete(':id')
   // remove(
   //   @Param('id', ParseUUIDPipe) id: string,
@@ -55,21 +47,30 @@ export class UsersController {
   //   return this.usersService.remove(id);
   // }
 
-  // @Patch('disabled/:id')
-  // disabled(
-  //   @Param('id', ParseUUIDPipe) id: string,
-  // ) {
-  //   return this.usersService.disabled(id);
-  // }
-
-  // @Delete('disabled/:id')
+  @Patch('disabled/:id')
   // @Auth(ValidRoles.superUser, ValidRoles.admin)
-  // enabled(
-  //   @GetUser() user: User,
-  //   @Param('id', ParseUUIDPipe) id: string,
-  // ) {
-  //   return this.usersService.enabled(id);
-  // }
+  disabled(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.usersService.disabled(id);
+  }
+
+  @Patch('enabled/:id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  enabled(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.usersService.enabled(id);
+  }
+
+  @Patch(':id')
+  @UsePipes(ValidationPipe)
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.update(id, updateUserDto);
+  }
 
   // @Delete('disabled/:id')
   // @RoleProtected(ValidRoles.superUser)
