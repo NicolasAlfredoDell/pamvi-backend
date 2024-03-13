@@ -132,6 +132,7 @@ export class UsersService {
     }
   }
 
+  // Verificar el slug, el ano del usuario, cambiar updateat
   async update(
     id: string,
     updateUserDto: UpdateUserDto,

@@ -14,6 +14,7 @@ export const initialData: SeedData = {
             lastnames: 'Dell',
             names: 'Nicolás Alfredo',
             password: '123',
+            passwordConfirm: '123',
             slug: 'Nicolas_Dell_36302765',
             twitter: 'https://twitter.com/dellnicoo',
             years: 31,

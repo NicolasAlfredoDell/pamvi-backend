@@ -12,10 +12,6 @@ export class CreateUserDto {
     @Type( () => Date )
     birthday: Date;
 
-    @IsBoolean({ message: 'El estado debe ser verdadero o falso' })
-    @IsOptional()
-    disabled?: boolean;
-
     @IsDefined({ message: 'El DNI debe estar definido' })
     @IsNotEmpty({ message: 'El DNI no puede estar vacío' })
     @IsString({ message: 'El DNI debe ser una cadena de caracteres' })
@@ -64,6 +60,11 @@ export class CreateUserDto {
         message: 'La contraseña debe tener al menos una mayúscula, una minúscula y un número'
     })
     password: string;
+
+    @IsDefined({ message: 'La confirmación de la contrseña debe estar definida' })
+    @IsNotEmpty({ message: 'La confirmación no puede estar vacía' })
+    @IsString({ message: 'La confirmación de la contrseña debe ser una cadena de caracteres' })
+    passwordConfirm: string;
 
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })

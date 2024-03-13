@@ -53,9 +53,12 @@ export class AuthService {
     async register(
         createUserDto: CreateUserDto,
     ) {
+        const { password, passwordConfirm, ...userDetails } = createUserDto;
+
+        if ( password !== passwordConfirm )
+            throw new BadRequestException(`Las contraseñas no son iguales.`);
+
         try {
-            const { password, ...userDetails } = createUserDto;
-            
             const user = this.authRepository.create({
                 ...userDetails,
                 password: bcrypt.hashSync(password, 10)

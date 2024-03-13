@@ -3,20 +3,21 @@ import { UserImage } from 'src/users/entities';
 
 export interface SeedUser {
 
-    dni: string;
+    avatar?: UserImage[];
     birthday: Date;
+    disabled: boolean;
+    dni: string;
+    created_at: Date;
     email: string;
     facebook?: string;
     instagram?: string;
     lastnames: string;
     names: string;
     password: string;
+    passwordConfirm: string,
     slug: string;
     twitter?: string;
-    years: number;
-    disabled: boolean;
-    created_at: Date;
     updated_at?: Date;
-    avatar?: UserImage[];
+    years: number;
 
 }

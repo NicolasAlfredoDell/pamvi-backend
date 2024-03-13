@@ -1,13 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString,
-    IsUrl, Matches, MaxDate, MinDate } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsNotEmpty, IsOptional, IsString, IsUrl,
+    Matches, MaxDate, MinDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
-// DTOs
-import { CreateUserDto } from './create-user.dto';
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
 
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })
     @IsNotEmpty({ message: 'La fecha de nacimiento no puede estar vacía' })
@@ -16,10 +11,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @MinDate(new Date('1920-01-01'), { message: 'La fecha debe ser igual o posterior al año 1920' })
     @Type( () => Date )
     birthday?: Date;
-
-    @IsBoolean({ message: 'El estado debe ser verdadero o falso' })
-    @IsOptional()
-    disabled?: boolean;
 
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })
