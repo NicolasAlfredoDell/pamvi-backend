@@ -42,7 +42,7 @@ export class GenderOfUsersController {
   @Delete(':id')
   // @Auth(ValidRoles.superUser, ValidRoles.admin)
   remove(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.genderOfUsersService.remove(id);
   }
@@ -52,7 +52,7 @@ export class GenderOfUsersController {
   removeAll(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.genderOfUsersService.remove(id);
+    return this.genderOfUsersService.removeAll();
   }
 
   @Patch('disabled/:id')
@@ -75,7 +75,7 @@ export class GenderOfUsersController {
   // @Auth(ValidRoles.superUser, ValidRoles.admin)
   @UsePipes(ValidationPipe)
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateGenderOfUserDto: UpdateGenderOfUserDto,
   ) {
     return this.genderOfUsersService.update(id, updateGenderOfUserDto);

@@ -52,7 +52,7 @@ export class UsersController {
   removeAll(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.usersService.remove(id);
+    return this.usersService.removeAll();
   }
 
   @Patch('disabled/:id')

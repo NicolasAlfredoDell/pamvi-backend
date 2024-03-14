@@ -1,4 +1,4 @@
-import { IsBoolean, IsDefined, IsNotEmpty, IsString, Matches } from "class-validator";
+import { IsDefined, IsNotEmpty, IsString, Matches } from "class-validator";
 
 export class UpdateGenderOfUserDto {
 

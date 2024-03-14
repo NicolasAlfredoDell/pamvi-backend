@@ -41,7 +41,7 @@ export class UsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
-  async removeAllUsers() {
+  async removeAll() {
     const query = this.userRepository.createQueryBuilder('user');
 
     try {

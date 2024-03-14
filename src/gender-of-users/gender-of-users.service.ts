@@ -40,7 +40,7 @@ export class GenderOfUsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
-  async deleteAllUsers() {
+  async removeAll() {
     const query = this.genderOfUserRepository.createQueryBuilder('gender-of-users');
 
     try {

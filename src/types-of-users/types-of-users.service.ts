@@ -1,38 +1,196 @@
-import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { validate as isUUID } from 'uuid';
+
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 // DTOs
-import { CreateTypesOfUserDto } from './dto/create-types-of-user.dto';
-import { UpdateTypesOfUserDto } from './dto/update-types-of-user.dto';
+import { CreateTypesOfUserDto, UpdateTypesOfUserDto } from './dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+
+// Entites
+import { TypesOfUser } from './entities/types-of-user.entity';
 
 @Injectable()
 export class TypesOfUsersService {
 
-  create(
+  private readonly logger = new Logger('TypesOfUsersService');
+
+  constructor(
+    @InjectRepository(TypesOfUser)
+    private readonly typesOfUsersServiceRepository: Repository<TypesOfUser>,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  async create(
     createTypesOfUserDto: CreateTypesOfUserDto,
   ) {
-    return 'This action adds a new typesOfUser';
+    try {
+      const { ...typeOfUsersDetails } = createTypesOfUserDto;
+
+      const typeOfUser = this.typesOfUsersServiceRepository.create({
+        ...typeOfUsersDetails,
+      });
+      
+      await this.typesOfUsersServiceRepository.save( typeOfUser );
+
+      return {
+        message: `Tipo de usuario creado correctamente.`,
+      };
+    } catch (error) { this.handleDBException(error) }
   }
 
-  findAll() {
-    return `This action returns all typesOfUsers`;
+  async removeAll() {
+    const query = this.typesOfUsersServiceRepository.createQueryBuilder('types-of-users');
+
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute();
+    } catch (error) { this.handleDBException(error) }
   }
 
-  findOne(
-    id: number,
+  async disabled(
+    id: string,
   ) {
-    return `This action returns a #${id} typesOfUser`;
+    const typeOfUser = await this.typesOfUsersServiceRepository.preload({
+      id: id,
+      disabled: true,
+    });
+
+    if ( !typeOfUser )
+      throw new NotFoundException(`El tipo de usuario no existe.`);
+
+    try {
+      await this.typesOfUsersServiceRepository.save( typeOfUser );
+
+      return {
+        message: 'Se deshabilito el tipo de usuario.',
+      };
+    } catch (error) { this.handleDBException(error) }
   }
 
-  update(
-    id: number,
+  async enabled(
+    id: string,
+  ) {
+    const typeOfUser = await this.typesOfUsersServiceRepository.preload({
+      id: id,
+      disabled: false,
+    });
+
+    if ( !typeOfUser )
+      throw new NotFoundException(`El tipo de usuario no existe.`);
+
+    try {
+      await this.typesOfUsersServiceRepository.save( typeOfUser );
+
+      return {
+        message: 'Se habilitó el tipo de usuario.',
+      };
+    } catch (error) { this.handleDBException(error) }
+  }
+
+  async findAll(
+    paginationDto: PaginationDto,
+  ) {
+    const { limit = 10, offset = 0 } = paginationDto;
+
+    const typesOfUsers = await this.typesOfUsersServiceRepository.find({
+      take: limit,
+      skip: offset,
+    });
+
+    return {
+      totals: await this.typesOfUsersServiceRepository.count(),
+      typesOfUsers: typesOfUsers,
+    }
+  }
+
+  async findOne(
+    term: string,
+  ) {
+    let typesOfUsers: TypesOfUser;
+
+    isUUID(term)
+      ? typesOfUsers = await this.typesOfUsersServiceRepository.findOneBy({ id: term })
+      : typesOfUsers = await this.typesOfUsersServiceRepository
+                        .createQueryBuilder('typesofuser')
+                        .where('typesofuser.name = :term', { term })
+                        .getOne();
+
+    if ( !typesOfUsers )
+      throw new NotFoundException(`No existe el tipo de usuario.`);
+
+    return typesOfUsers;
+  }
+
+  async findOnePlain( term: string ) {
+    const { ...rest } = await this.findOne( term );
+    
+    return {
+      ...rest,
+    }
+  }
+
+  async remove(
+    id: string,
+  ) {
+    const typeOfUsers = await this.findOne(id);
+
+    try {
+      await this.typesOfUsersServiceRepository.remove( typeOfUsers );
+  
+      return {
+        message: `Tipo de usuario eliminado.`,
+      };
+    } catch (error) { this.handleDBException(error) }
+  }
+
+  async update(
+    id: string,
     updateTypesOfUserDto: UpdateTypesOfUserDto,
   ) {
-    return `This action updates a #${id} typesOfUser`;
+    const { ...typeOfUsersDeatils } = updateTypesOfUserDto;
+
+    const typeOfUsers = await this.typesOfUsersServiceRepository.preload({
+      id,
+      ...typeOfUsersDeatils,
+    });
+
+    if ( !typeOfUsers )
+      throw new NotFoundException(`El tipo de usuario no existe.`);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager.save(typeOfUsers);
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+
+      await this.typesOfUsersServiceRepository.save( typeOfUsers );
+
+      return {
+        message: `Tipo de usuario modificado correctamente.`,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
+
+      this.handleDBException(error);
+    }
   }
 
-  remove(
-    id: number,
+  private handleDBException(
+    error: any,
   ) {
-    return `This action removes a #${id} typesOfUser`;
+    if (error.code === `23505`)
+      throw new BadRequestException(error.detail);
+    
+    this.logger.error(error);
+    throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);
   }
+
 }

@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Query, ParseUUIDPipe } from '@nestjs/common';
 
 // DTOs
-import { CreateTypesOfUserDto } from './dto/create-types-of-user.dto';
-import { UpdateTypesOfUserDto } from './dto/update-types-of-user.dto';
+import { CreateTypesOfUserDto, UpdateTypesOfUserDto } from './dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Services
 import { TypesOfUsersService } from './types-of-users.service';
@@ -15,6 +15,8 @@ export class TypesOfUsersController {
   ) {}
 
   @Post()
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  @UsePipes(ValidationPipe)
   create(
     @Body() createTypesOfUserDto: CreateTypesOfUserDto,
   ) {
@@ -22,30 +24,59 @@ export class TypesOfUsersController {
   }
 
   @Get()
-  findAll() {
-    return this.typesOfUsersService.findAll();
+  @UsePipes(ValidationPipe)
+  findAll(
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.typesOfUsersService.findAll(paginationDto);
   }
 
   @Get(':id')
+   // @Auth(ValidRoles.superUser, ValidRoles.admin)
   findOne(
     @Param('id') id: string,
   ) {
-    return this.typesOfUsersService.findOne(+id);
+    return this.typesOfUsersService.findOne(id);
+  }
+
+  @Delete(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.typesOfUsersService.remove(id);
+  }
+
+  @Delete(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  removeAll(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.typesOfUsersService.removeAll();
+  }
+
+  @Patch('disabled/:id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  disabled(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.typesOfUsersService.disabled(id);
+  }
+
+  @Patch('enabled/:id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  enabled(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.typesOfUsersService.enabled(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTypesOfUserDto: UpdateTypesOfUserDto,
   ) {
-    return this.typesOfUsersService.update(+id, updateTypesOfUserDto);
-  }
-
-  @Delete(':id')
-  remove(
-    @Param('id') id: string,
-  ) {
-    return this.typesOfUsersService.remove(+id);
+    return this.typesOfUsersService.update(id, updateTypesOfUserDto);
   }
 
 }
