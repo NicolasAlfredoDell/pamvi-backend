@@ -40,7 +40,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  // @Auth(ValidRoles.superUser)
   remove(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
@@ -48,7 +48,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  // @Auth(ValidRoles.superUser)
   removeAll(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
