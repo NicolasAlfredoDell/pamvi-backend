@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, UsePipes, ValidationPipe, Query } from '@nestjs/common';
 
 // DTOs
-import { CreateGenderOfUserDto } from './dto/create-gender-of-user.dto';
-import { UpdateGenderOfUserDto } from './dto/update-gender-of-user.dto';
+import { CreateGenderOfUserDto, UpdateGenderOfUserDto } from './dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Services
 import { GenderOfUsersService } from './gender-of-users.service';
@@ -15,6 +15,8 @@ export class GenderOfUsersController {
   ) {}
 
   @Post()
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  @UsePipes(ValidationPipe)
   create(
     @Body() createGenderOfUserDto: CreateGenderOfUserDto,
   ) {
@@ -22,30 +24,61 @@ export class GenderOfUsersController {
   }
 
   @Get()
-  findAll() {
-    return this.genderOfUsersService.findAll();
+  @UsePipes(ValidationPipe)
+  findAll(
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.genderOfUsersService.findAll(paginationDto);
   }
 
   @Get(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
   findOne(
     @Param('id') id: string,
   ) {
-    return this.genderOfUsersService.findOne(+id);
+    return this.genderOfUsersService.findOne(id);
+  }
+
+  @Delete(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  remove(
+    @Param('id') id: string,
+  ) {
+    return this.genderOfUsersService.remove(id);
+  }
+
+  @Delete(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  removeAll(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.genderOfUsersService.remove(id);
+  }
+
+  @Patch('disabled/:id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  disabled(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.genderOfUsersService.disabled(id);
+  }
+
+  @Patch('enabled/:id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  enabled(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.genderOfUsersService.enabled(id);
   }
 
   @Patch(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  @UsePipes(ValidationPipe)
   update(
     @Param('id') id: string,
     @Body() updateGenderOfUserDto: UpdateGenderOfUserDto,
   ) {
-    return this.genderOfUsersService.update(+id, updateGenderOfUserDto);
-  }
-
-  @Delete(':id')
-  remove(
-    @Param('id') id: string,
-  ) {
-    return this.genderOfUsersService.remove(+id);
+    return this.genderOfUsersService.update(id, updateGenderOfUserDto);
   }
 
 }

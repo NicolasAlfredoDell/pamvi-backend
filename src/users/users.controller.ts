@@ -2,11 +2,10 @@ import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UseP
 
 // Decorators
 import { Auth } from './decorators/user.decorator';
-import { GetUser } from './decorators/get-user.decorator';
 
-// Dtos
+// DTOs
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto';
 
 // Entities
 import { User } from './entities';
@@ -16,7 +15,6 @@ import { ValidRoles } from './interfaces/valid-roles.interface';
 
 // Services
 import { UsersService } from './users.service';
-// import { IncomingHttpHeaders } from 'http';
 
 @Controller('users')
 export class UsersController {
@@ -34,18 +32,28 @@ export class UsersController {
   }
 
   @Get(':term')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
   findOne(
     @Param('term') term: string,
   ) {
     return this.usersService.findOne(term);
   }
 
-  // @Delete(':id')
-  // remove(
-  //   @Param('id', ParseUUIDPipe) id: string,
-  // ) {
-  //   return this.usersService.remove(id);
-  // }
+  @Delete(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.usersService.remove(id);
+  }
+
+  @Delete(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  removeAll(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.usersService.remove(id);
+  }
 
   @Patch('disabled/:id')
   // @Auth(ValidRoles.superUser, ValidRoles.admin)
@@ -64,6 +72,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
   @UsePipes(ValidationPipe)
   update(
     @Param('id', ParseUUIDPipe) id: string,

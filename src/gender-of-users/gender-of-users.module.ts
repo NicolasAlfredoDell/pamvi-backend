@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Controllers
 import { GenderOfUsersController } from './gender-of-users.controller';
+
+// Entities
+import { GenderOfUser } from './entities/gender-of-user.entity';
 
 // Services
 import { GenderOfUsersService } from './gender-of-users.service';
@@ -12,6 +16,9 @@ import { GenderOfUsersService } from './gender-of-users.service';
   ],
   providers: [
     GenderOfUsersService,
+  ],
+  imports: [
+    TypeOrmModule.forFeature([ GenderOfUser ]),
   ],
 })
 export class GenderOfUsersModule {}

@@ -101,7 +101,7 @@ export class User {
         this.updated_at = new Date();
     }
 
-    @BeforeInsert()
+    @BeforeUpdate()
     setYearsUpdate() {
         this.setYears();
     }
@@ -115,7 +115,7 @@ export class User {
 
         this.email = this.email.toLocaleLowerCase().trim();
     
-        this.slug = `${this.names.replace(' ', '_')}_${this.lastnames}_${this.dni}`;
+        this.slug = `${this.names.replace(' ', '_')}_${this.lastnames.replace(' ', '_')}_${this.dni}`;
     }
 
     setYears(): void {

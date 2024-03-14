@@ -19,7 +19,7 @@ export class SeedService {
   }
 
   private async insertUsers() {
-    this.usersService.deleteAllUsers();
+    this.usersService.removeAllUsers();
 
     const users = initialData.users;
 

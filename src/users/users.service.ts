@@ -5,8 +5,8 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
-import { CreateUserDto, UpdateUserDto } from './dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 // Entites
 import { User, UserImage } from './entities';
@@ -38,6 +38,17 @@ export class UsersService {
       await this.userRepository.save( user );
 
       return { ...user, images };
+    } catch (error) { this.handleDBException(error) }
+  }
+
+  async removeAllUsers() {
+    const query = this.userRepository.createQueryBuilder('user');
+
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute();
     } catch (error) { this.handleDBException(error) }
   }
 
@@ -132,7 +143,20 @@ export class UsersService {
     }
   }
 
-  // Verificar el slug, el ano del usuario, cambiar updateat
+  async remove(
+    id: string,
+  ) {
+    const user = await this.findOne(id);
+
+    try {
+      await this.userRepository.remove( user );
+  
+      return {
+        message: `Usuario eliminado.`,
+      };
+    } catch (error) { this.handleDBException(error) }
+  }
+
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
@@ -184,29 +208,6 @@ export class UsersService {
     
     this.logger.error(error);
     throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);
-  }
-
-  async remove(
-    id: string,
-  ) {
-    const user = await this.findOne(id);
-
-    try {
-      await this.userRepository.remove( user );
-  
-      return `Usuario eliminado.`;
-    } catch (error) { this.handleDBException(error) }
-  }
-
-  async deleteAllUsers() {
-    const query = this.userRepository.createQueryBuilder('user');
-
-    try {
-      return await query
-        .delete()
-        .where({})
-        .execute();
-    } catch (error) { this.handleDBException(error) }
   }
 
 }
