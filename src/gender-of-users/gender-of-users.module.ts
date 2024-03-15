@@ -20,5 +20,8 @@ import { GenderOfUsersService } from './gender-of-users.service';
   imports: [
     TypeOrmModule.forFeature([ GenderOfUser ]),
   ],
+  exports: [
+    GenderOfUsersService,
+  ]
 })
 export class GenderOfUsersModule {}

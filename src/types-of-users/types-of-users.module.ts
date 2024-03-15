@@ -20,5 +20,8 @@ import { TypesOfUsersService } from './types-of-users.service';
   imports: [
     TypeOrmModule.forFeature([ TypesOfUser ]),
   ],
+  exports: [
+    TypesOfUsersService,
+  ]
 })
 export class TypesOfUsersModule {}
