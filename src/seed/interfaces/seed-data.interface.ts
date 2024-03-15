@@ -1,8 +1,10 @@
 // Interfaces
-import { SeedUser } from "./seed-user.interface";
+import { SeedGendersOfUsers, SeedTypesOfUsers, SeedUser } from "./";
 
 export interface SeedData {
     
+    gendersOfUsers: SeedGendersOfUsers[],
+    typesOfUsers: SeedTypesOfUsers[],
     users: SeedUser[],
 
 }
