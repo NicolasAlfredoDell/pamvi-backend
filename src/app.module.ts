@@ -10,10 +10,13 @@ import { EnvConfiguration } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.validation';
 
 // Modules
+import { AdversitingModule } from './adversiting/adversiting.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
 import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
+import { MailsModule } from './mails/mails.module';
+import { PetsModule } from './pets/pets.module';
 import { SeedModule } from './seed/seed.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
 import { UsersModule } from './users/users.module';
@@ -40,10 +43,13 @@ import { UsersModule } from './users/users.module';
       rootPath: join(__dirname, '..', 'public'),
     }),
 
+    AdversitingModule,
     AuthModule,
     CommonModule,
     FilesModule,
     GenderOfUsersModule,
+    MailsModule,
+    PetsModule,
     SeedModule,
     TypesOfUsersModule,
     UsersModule,

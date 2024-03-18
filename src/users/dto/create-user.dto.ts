@@ -1,6 +1,6 @@
-import { Type } from "class-transformer";
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDate, IsDefined, IsEmail, IsNotEmpty, IsOptional,
-    IsPositive, IsString, IsUrl, Matches, MaxDate, MaxLength, MinDate, MinLength } from "class-validator";
+import { Type } from 'class-transformer';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString,
+    IsUrl, Matches, MaxDate, MaxLength, MinDate, MinLength } from 'class-validator';
 
 export class CreateUserDto {
 

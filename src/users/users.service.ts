@@ -41,17 +41,6 @@ export class UsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
-  async removeAll() {
-    const query = this.userRepository.createQueryBuilder('user');
-
-    try {
-      return await query
-        .delete()
-        .where({})
-        .execute();
-    } catch (error) { this.handleDBException(error) }
-  }
-
   async disabled(
     id: string,
   ) {
@@ -154,6 +143,17 @@ export class UsersService {
       return {
         message: `Usuario eliminado.`,
       };
+    } catch (error) { this.handleDBException(error) }
+  }
+
+  async removeAll() {
+    const query = this.userRepository.createQueryBuilder('user');
+
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute();
     } catch (error) { this.handleDBException(error) }
   }
 

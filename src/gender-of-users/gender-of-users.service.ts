@@ -32,9 +32,10 @@ export class GenderOfUsersService {
         ...genderOfUsersDetails,
       });
       
-      await this.genderOfUserRepository.save( genderOfUser );
+      const gender = await this.genderOfUserRepository.save( genderOfUser );
 
       return {
+        data: [gender],
         message: `Genero creado correctamente.`,
       };
     } catch (error) { this.handleDBException(error) }

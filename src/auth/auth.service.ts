@@ -1,14 +1,14 @@
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { LoginUserDto, RecoveryPasswordDto, SendMailRecoveryPasswordDto } from './dto';
 
 // Entities
 import { User } from 'src/users/entities/user.entity';
@@ -50,6 +50,33 @@ export class AuthService {
         };
     }
 
+    async recoveryPassword(
+        recoveryPasswordDto: RecoveryPasswordDto,
+    ) {
+        const { password, passwordConfirm } = recoveryPasswordDto;
+
+        if ( password !== passwordConfirm )
+            throw new BadRequestException(`Las contraseñas no coinciden.`);
+
+        try {
+            // VERIFICAR QUE EXISTE EL TOKEN
+            // SI NO EXISTE O ESTA VENCIDO, MENSAJE DE ERROR
+            // SI EXISTE ELIMINAR TOKEN DE LA BD Y CAMBIAR LA CONTRASENA AL USUARIO
+
+            // const user = await this.userRepository.findOne({
+            //     where: { email },
+            //     select: { email: true, password: true, id: true },
+            // });
+
+            // if ( !user )
+            //     throw new NotFoundException(`No existe el usuario.`);
+
+            return {
+                message: `Contraseña modificada correctamente.`,
+            };
+        } catch (error) { this.handleDBException(error) }
+    }
+
     async register(
         createUserDto: CreateUserDto,
     ) {
@@ -72,6 +99,31 @@ export class AuthService {
         } catch (error) { this.handleDBException(error) }
     }
 
+    async sendMailForRecoveryPassword(
+        sendMailRecoveryPasswordDto: SendMailRecoveryPasswordDto,
+    ) {
+        const { email } = sendMailRecoveryPasswordDto;
+
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email },
+                select: { email: true, password: true, id: true },
+            });
+
+            if ( !user )
+                throw new NotFoundException(`No existe el correo.`);
+
+            // GENERAR UN TOKEN CON VALIDACION DE 1 HORA
+            // PONER UNA RESOURCE PARA GUARDAR LOS TOKENS
+            // CREAR TEMPLATE PARA EL MAIL
+            // ENVIAR EMAIL 
+
+            return {
+                message: `Correo enviado a ${email}`,
+            };
+        } catch (error) { this.handleDBException(error) }
+    }
+
     private getJWT(
         payload: JwtPayload,
     ): string {
@@ -81,8 +133,14 @@ export class AuthService {
     private handleDBException(
         error: any,
     ): never {
-        if ( error.code === '23505' )
+        if ( error.code === '23505' ) {
+            if ( error.detail.includes('Key (dni)') )
+                throw new BadRequestException(`El dni ya se encuentra registrado.`);
+            if ( error.detail.includes('Key (email)') )
+                throw new BadRequestException(`El correo ya se encuentra registrado.`);
+
             throw new BadRequestException(error.detail);
+        }
         
         this.logger.error(error);
         throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);
