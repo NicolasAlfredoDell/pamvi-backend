@@ -16,6 +16,9 @@ import { User } from 'src/users/entities/user.entity';
 // interfaces
 import { JwtPayload } from './interfaces/jwt-payload.interfaces';
 
+// Services
+import { UsersService } from '../users/users.service';
+
 @Injectable()
 export class AuthService {
 
@@ -28,28 +31,50 @@ export class AuthService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
 
+        private usersService: UsersService,
+
         private readonly jwtService: JwtService,
     ) {}
+
+    async activeUser(
+        token: any,
+    ) {
+        const { exp, id } = await this.jwtService.decode(token);
+
+        if ( exp < Date.now() / 1000 )
+            throw new UnauthorizedException(`Debe volver a solicitar el correo para la activación de su cuenta.`);
+        
+        try {
+            this.usersService.enabled(id);
+
+            return {
+                message: `Cuenta activada`,
+            };
+        } catch (error) { this.handleDBException(error) }
+    }
 
     async login(
         loginUserDto: LoginUserDto,
     ) {
         const { password, email } = loginUserDto;
 
-        const user = await this.userRepository.findOne({
-            where: { email },
-            select: { email: true, password: true, id: true },
-        });
-
-        if ( !user || !bcrypt.compareSync( password, user.password ) )
-            throw new UnauthorizedException('Usuario y/o contraseña incorrectas.');
-
-        return {
-            message: 'Logueado correctamente.',
-            token: this.getJWT({ id: user.id, email: user.email, }),
-        };
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email },
+                select: { email: true, password: true, id: true },
+            });
+    
+            if ( !user || !bcrypt.compareSync( password, user.password ) )
+                throw new UnauthorizedException('Usuario y/o contraseña incorrectas.');
+    
+            return {
+                message: 'Logueado correctamente.',
+                token: this.getJWT({ id: user.id, email: user.email, }),
+            };
+        } catch (error) { this.handleDBException(error) }
     }
 
+    //? FALTA TERMINAR
     async recoveryPassword(
         recoveryPasswordDto: RecoveryPasswordDto,
     ) {
@@ -77,6 +102,7 @@ export class AuthService {
         } catch (error) { this.handleDBException(error) }
     }
 
+    //? FALTA TERMINAR
     async register(
         createUserDto: CreateUserDto,
     ) {
@@ -93,12 +119,15 @@ export class AuthService {
 
             await this.authRepository.save( user );
 
+            // Llamar servicio del mail para enviar el correo
+
             return {
-                message: 'Usuario registrado correctamente. Le hemos enviado un correo para activar su cuenta.',
+                message: `Usuario registrado correctamente. Le hemos enviado un correo a ${user.email} para activar su cuenta.`,
             };
         } catch (error) { this.handleDBException(error) }
     }
 
+    //? FALTA TERMINAR
     async sendMailForRecoveryPassword(
         sendMailRecoveryPasswordDto: SendMailRecoveryPasswordDto,
     ) {
@@ -136,6 +165,7 @@ export class AuthService {
         if ( error.code === '23505' ) {
             if ( error.detail.includes('Key (dni)') )
                 throw new BadRequestException(`El dni ya se encuentra registrado.`);
+
             if ( error.detail.includes('Key (email)') )
                 throw new BadRequestException(`El correo ya se encuentra registrado.`);
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -15,12 +15,11 @@ export class AuthController {
         private readonly authService: AuthService,
     ) { }
 
-    @Post('login')
-    @UsePipes(ValidationPipe)
-    login(
-        @Body() loginUserDto: LoginUserDto,
+    @Patch('active-user/:token')
+    activeUser(
+        @Param('token') token: any,
     ) {
-        return this.authService.login(loginUserDto);
+        return this.authService.activeUser(token);
     }
 
     @Patch('recovery-password')
@@ -29,6 +28,14 @@ export class AuthController {
         @Body() recoveryPasswordDto: RecoveryPasswordDto,
     ) {
         return this.authService.recoveryPassword(recoveryPasswordDto);
+    }
+
+    @Post('login')
+    @UsePipes(ValidationPipe)
+    login(
+        @Body() loginUserDto: LoginUserDto,
+    ) {
+        return this.authService.login(loginUserDto);
     }
 
     @Post('register')
