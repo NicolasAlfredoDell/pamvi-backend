@@ -18,6 +18,7 @@ import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
 import { MailsModule } from './mails/mails.module';
 import { PetsModule } from './pets/pets.module';
 import { SeedModule } from './seed/seed.module';
+import { TokensValidationModule } from './tokens-validation/tokens-validation.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
 import { UsersModule } from './users/users.module';
 
@@ -51,6 +52,7 @@ import { UsersModule } from './users/users.module';
     MailsModule,
     PetsModule,
     SeedModule,
+    TokensValidationModule,
     TypesOfUsersModule,
     UsersModule,
   ],

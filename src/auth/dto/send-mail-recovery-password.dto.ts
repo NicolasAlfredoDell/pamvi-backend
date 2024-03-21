@@ -4,7 +4,7 @@ export class SendMailRecoveryPasswordDto {
 
     @IsDefined({ message: 'Debe enviar el correo.' })
     @IsNotEmpty({ message: 'El correo no puede estar vacío.' })
-    @IsString({ message: 'El correo debe estar compuesto de caracteres.' })
+    @IsString({ message: 'El correo debe ser una cadena de caracteres.' })
     email: string;
 
 }

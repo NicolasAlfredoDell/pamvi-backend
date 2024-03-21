@@ -150,10 +150,14 @@ export class UsersService {
     const query = this.userRepository.createQueryBuilder('user');
 
     try {
-      return await query
+      await query
         .delete()
         .where({})
         .execute();
+
+      return {
+        message: `Todos los usuarios fueron eliminados correctamente.`,
+      }
     } catch (error) { this.handleDBException(error) }
   }
 

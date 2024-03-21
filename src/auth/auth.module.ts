@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 
 // Modules
+import { TokensValidationModule } from 'src/tokens-validation/tokens-validation.module';
 import { UsersModule } from 'src/users/users.module';
 
 // Services
@@ -42,6 +43,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         }
       }
     }),
+    TokensValidationModule,
     UsersModule,
   ],
   exports: [

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Controllers
 import { UsersController } from './users.controller';
@@ -8,12 +9,8 @@ import { UsersController } from './users.controller';
 // Entites
 import { User, UserImage } from './entities';
 
-// Modules
-import { TypeOrmModule } from '@nestjs/typeorm';
-
 // Services
 import { UsersService } from './users.service';
-
 
 @Module({
   controllers: [

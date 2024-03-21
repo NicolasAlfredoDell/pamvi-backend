@@ -17,6 +17,7 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interfaces';
 
 // Services
+import { TokensValidationService } from '../tokens-validation/tokens-validation.service';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -31,9 +32,11 @@ export class AuthService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
 
-        private usersService: UsersService,
-
         private readonly jwtService: JwtService,
+
+        private tokensValidationService: TokensValidationService,
+
+        private usersService: UsersService,
     ) {}
 
     async activeUser(
@@ -142,10 +145,11 @@ export class AuthService {
             if ( !user )
                 throw new NotFoundException(`No existe el correo.`);
 
-            // GENERAR UN TOKEN CON VALIDACION DE 1 HORA
-            // PONER UNA RESOURCE PARA GUARDAR LOS TOKENS
-            // CREAR TEMPLATE PARA EL MAIL
-            // ENVIAR EMAIL 
+            const token = await this.getJWT({ id: user.id, email: user.email, });
+            
+            await this.tokensValidationService.create({token});
+            
+            // ENVIAR EMAIL
 
             return {
                 message: `Correo enviado a ${email}`,

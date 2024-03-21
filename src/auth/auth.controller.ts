@@ -17,7 +17,7 @@ export class AuthController {
 
     @Patch('active-user/:token')
     activeUser(
-        @Param('token') token: any,
+        @Param('token') token: string,
     ) {
         return this.authService.activeUser(token);
     }
@@ -46,7 +46,7 @@ export class AuthController {
         return this.authService.register(createUserDto);
     }
 
-    @Post('send-recovery-password')
+    @Post('send-mail-recovery-password')
     @UsePipes(ValidationPipe)
     sendMailForRecoveryPassword(
         @Body() sendMailRecoveryPasswordDto: SendMailRecoveryPasswordDto,
