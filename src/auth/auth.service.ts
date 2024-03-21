@@ -77,27 +77,38 @@ export class AuthService {
         } catch (error) { this.handleDBException(error) }
     }
 
-    //? FALTA TERMINAR
     async recoveryPassword(
         recoveryPasswordDto: RecoveryPasswordDto,
+        token: string,
     ) {
         const { password, passwordConfirm } = recoveryPasswordDto;
 
         if ( password !== passwordConfirm )
             throw new BadRequestException(`Las contraseñas no coinciden.`);
 
+        const { email, exp } = await this.jwtService.decode(token);
+
+        if ( exp < Date.now() / 1000 )
+            throw new UnauthorizedException(`Debe volver a solicitar el correo para la activación de su cuenta.`);
+
+        const user = await this.userRepository.findOne({
+            where: { email },
+            select: { disabled: true, email: true, password: true, id: true },
+        });
+
+        if ( !user )
+            throw new NotFoundException(`No existe el usuario.`);
+
+        if ( user.disabled )
+            throw new UnauthorizedException(`El usuario se encuentra deshabilitado.`);
+
+        const tokenValidation = await this.tokensValidationService.findOne(token);
+
+        if ( !tokenValidation )
+            throw new NotFoundException(`Debe volver a solicitar el correo para la activación de su cuenta.`);
+
         try {
-            // VERIFICAR QUE EXISTE EL TOKEN
-            // SI NO EXISTE O ESTA VENCIDO, MENSAJE DE ERROR
-            // SI EXISTE ELIMINAR TOKEN DE LA BD Y CAMBIAR LA CONTRASENA AL USUARIO
-
-            // const user = await this.userRepository.findOne({
-            //     where: { email },
-            //     select: { email: true, password: true, id: true },
-            // });
-
-            // if ( !user )
-            //     throw new NotFoundException(`No existe el usuario.`);
+            await this.tokensValidationService.remove(tokenValidation.id);
 
             return {
                 message: `Contraseña modificada correctamente.`,

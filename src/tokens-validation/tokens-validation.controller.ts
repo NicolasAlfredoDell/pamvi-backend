@@ -24,9 +24,9 @@ export class TokensValidationController {
   @Get(':id')
    // @Auth(ValidRoles.superUser, ValidRoles.admin)
   findOne(
-    @Param('id') id: string,
+    @Param('term') term: string,
   ) {
-    return this.tokensValidationService.findOne(id);
+    return this.tokensValidationService.findOne(term);
   }
 
   @Delete(':id')

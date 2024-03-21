@@ -22,12 +22,13 @@ export class AuthController {
         return this.authService.activeUser(token);
     }
 
-    @Patch('recovery-password')
+    @Patch('recovery-password/:token')
     @UsePipes(ValidationPipe)
     recoveryPassword(
         @Body() recoveryPasswordDto: RecoveryPasswordDto,
+        @Param('token') token: string,
     ) {
-        return this.authService.recoveryPassword(recoveryPasswordDto);
+        return this.authService.recoveryPassword(recoveryPasswordDto, token);
     }
 
     @Post('login')
