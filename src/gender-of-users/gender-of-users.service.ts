@@ -19,6 +19,7 @@ export class GenderOfUsersService {
   constructor(
     @InjectRepository(GenderOfUser)
     private readonly genderOfUserRepository: Repository<GenderOfUser>,
+
     private readonly dataSource: DataSource,
   ) {}
 
