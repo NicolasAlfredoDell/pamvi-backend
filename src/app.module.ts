@@ -1,6 +1,7 @@
 import { join } from 'path';
 
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -49,6 +50,24 @@ import { UsersModule } from './users/users.module';
     CommonModule,
     FilesModule,
     GenderOfUsersModule,
+    //* Agregar en la carpeta config los defaults
+    // MailerModule.forRootAsync({
+    //   inject: [ConfigService],
+    //   useFactory: async(configService: ConfigService) => ({
+    //     transport: {
+    //       host: configService.get<string>('MAIL_HOST'),
+    //       port: configService.get<string>('MAIL_PORT'),
+    //       secure: false,
+    //       auth: {
+    //         user: configService.get<string>('MAIL_USER'),
+    //         pass: configService.get<string>('MAIL_PASSWORD'),
+    //       },
+    //     },
+    //     defaults: {
+    //       from: configService.get<string>('MAIL_SENDER'),
+    //     },
+    //   }),
+    // }),
     MailsModule,
     PetsModule,
     SeedModule,

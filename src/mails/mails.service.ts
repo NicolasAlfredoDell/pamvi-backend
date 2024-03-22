@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
+
+// DTOs
 import { CreateMailDto } from './dto/create-mail.dto';
-import { UpdateMailDto } from './dto/update-mail.dto';
 
 @Injectable()
 export class MailsService {
-  create(createMailDto: CreateMailDto) {
-    return 'This action adds a new mail';
+
+  constructor(
+    private readonly mailerService: MailerService,
+  ) { }
+
+  sendMail(
+    createMailDto: CreateMailDto,
+  ) {
+    
   }
 
-  findAll() {
-    return `This action returns all mails`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} mail`;
-  }
-
-  update(id: number, updateMailDto: UpdateMailDto) {
-    return `This action updates a #${id} mail`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} mail`;
-  }
 }
