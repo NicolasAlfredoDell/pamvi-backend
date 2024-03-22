@@ -30,6 +30,26 @@ import { UsersModule } from './users/users.module';
       validationSchema: JoiValidationSchema,
     }),
 
+    //* Agregar en la carpeta config los defaults
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async(configService: ConfigService) => ({
+        transport: {
+          host: configService.get<string>('MAIL_HOST'),
+          port: configService.get<string>('MAIL_PORT'),
+          secure: false,
+          auth: {
+            user: configService.get<string>('MAIL_USER'),
+            pass: configService.get<string>('MAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: configService.get<string>('MAIL_SENDER'),
+        },
+      }),
+    }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -50,24 +70,6 @@ import { UsersModule } from './users/users.module';
     CommonModule,
     FilesModule,
     GenderOfUsersModule,
-    //* Agregar en la carpeta config los defaults
-    // MailerModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: async(configService: ConfigService) => ({
-    //     transport: {
-    //       host: configService.get<string>('MAIL_HOST'),
-    //       port: configService.get<string>('MAIL_PORT'),
-    //       secure: false,
-    //       auth: {
-    //         user: configService.get<string>('MAIL_USER'),
-    //         pass: configService.get<string>('MAIL_PASSWORD'),
-    //       },
-    //     },
-    //     defaults: {
-    //       from: configService.get<string>('MAIL_SENDER'),
-    //     },
-    //   }),
-    // }),
     MailsModule,
     PetsModule,
     SeedModule,
