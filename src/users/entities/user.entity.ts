@@ -82,6 +82,7 @@ export class User {
 
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
+    // FALTA MASCOTAS
 
     @BeforeInsert()
     setFullNameAndSlugInsert() {
