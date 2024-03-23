@@ -93,6 +93,21 @@ export class TokensValidationService {
     } catch (error) { this.handleDBException(error) }
   }
 
+  async removeAllExpired() {
+    const query = this.tokensValidationRepository.createQueryBuilder('tokensValidation');
+
+    try {
+      await query
+        .delete()
+        .where('tuModelo.created_at < :today', { today: new Date() })
+        .execute();
+
+        return {
+          message: `Todos los tokens expirados fueron eliminados correctamente.`,
+        }
+    } catch (error) { this.handleDBException(error) }
+  }
+
   private handleDBException(
     error: any,
   ): never {

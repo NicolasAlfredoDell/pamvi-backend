@@ -1,5 +1,7 @@
 import { join } from 'path';
 
+import { ScheduleModule } from '@nestjs/schedule';
+
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
@@ -18,6 +20,7 @@ import { FilesModule } from './files/files.module';
 import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
 import { MailsModule } from './mails/mails.module';
 import { PetsModule } from './pets/pets.module';
+import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { SeedModule } from './seed/seed.module';
 import { TokensValidationModule } from './tokens-validation/tokens-validation.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
@@ -61,6 +64,8 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
     }),
 
+    ScheduleModule.forRoot(),
+
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -72,6 +77,7 @@ import { UsersModule } from './users/users.module';
     GenderOfUsersModule,
     // MailsModule,
     PetsModule,
+    ScheduleTasksModule,
     SeedModule,
     TokensValidationModule,
     TypesOfUsersModule,
