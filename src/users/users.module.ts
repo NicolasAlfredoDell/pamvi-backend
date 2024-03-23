@@ -9,6 +9,9 @@ import { UsersController } from './users.controller';
 // Entites
 import { User, UserImage } from './entities';
 
+// Modules
+import { GenderOfUsersModule } from 'src/gender-of-users/gender-of-users.module';
+
 // Services
 import { UsersService } from './users.service';
 
@@ -21,6 +24,7 @@ import { UsersService } from './users.service';
   ],
   imports: [
     ConfigModule,
+    GenderOfUsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     TypeOrmModule.forFeature([ User, UserImage ]),
   ],

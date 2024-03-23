@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -34,24 +35,30 @@ import { UsersModule } from './users/users.module';
     }),
 
     //* Agregar en la carpeta config los defaults
-    // MailerModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: async(configService: ConfigService) => ({
-    //     transport: {
-    //       host: configService.get<string>('MAIL_HOST'),
-    //       port: configService.get<string>('MAIL_PORT'),
-    //       secure: false,
-    //       auth: {
-    //         user: configService.get<string>('MAIL_USER'),
-    //         pass: configService.get<string>('MAIL_PASSWORD'),
-    //       },
-    //     },
-    //     defaults: {
-    //       from: configService.get<string>('MAIL_SENDER'),
-    //     },
-    //   }),
-    // }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async(configService: ConfigService) => ({
+        transport: {
+          host: configService.get<string>('MAIL_HOST'),
+          secure: false,
+          auth: {
+            user: configService.get<string>('MAIL_USER'),
+            pass: configService.get<string>('MAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: configService.get<string>('MAIL_SENDER'),
+        },
+        template: {
+          dir:join(__dirname, '../static/mail-templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          }
+        }
+      }),
+    }),
 
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -75,7 +82,7 @@ import { UsersModule } from './users/users.module';
     CommonModule,
     FilesModule,
     GenderOfUsersModule,
-    // MailsModule,
+    MailsModule,
     PetsModule,
     ScheduleTasksModule,
     SeedModule,

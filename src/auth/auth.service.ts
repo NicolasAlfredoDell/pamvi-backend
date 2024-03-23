@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 // Dtos
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserDto, RecoveryPasswordDto, SendMailRecoveryPasswordDto } from './dto';
+import { CreateMailDto } from '../mails/dto/create-mail.dto';
 
 // Entities
 import { User } from 'src/users/entities/user.entity';
@@ -17,9 +18,10 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interfaces';
 
 // Services
+import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
+import { MailsService } from '../mails/mails.service';
 import { TokensValidationService } from '../tokens-validation/tokens-validation.service';
 import { UsersService } from '../users/users.service';
-import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
 
 @Injectable()
 export class AuthService {
@@ -36,6 +38,8 @@ export class AuthService {
         private readonly genderOfUsersService: GenderOfUsersService,
 
         private readonly jwtService: JwtService,
+
+        private readonly mailsService: MailsService,
 
         private tokensValidationService: TokensValidationService,
 
@@ -120,7 +124,6 @@ export class AuthService {
         } catch (error) { this.handleDBException(error) }
     }
 
-    //? FALTA TERMINAR
     async register(
         createUserDto: CreateUserDto,
     ) {
@@ -129,12 +132,15 @@ export class AuthService {
         if ( password !== passwordConfirm )
             throw new BadRequestException(`Las contraseñas no son iguales.`);
 
+        const genderDB = await this.genderOfUsersService.findOne(gender);
+    
+        if ( !genderDB )
+            throw new BadRequestException(`El género no existe.`);
+    
+        if ( genderDB.disabled )
+            throw new BadRequestException(`El género está deshabilitado.`);
+
         try {
-            const genderDB = await this.genderOfUsersService.findOne(gender);
-
-            if ( !genderDB )
-                throw new BadRequestException(`El género no existe.`);
-
             const user = this.authRepository.create({
                 ...userDetails,
                 gender: genderDB,
@@ -143,7 +149,14 @@ export class AuthService {
 
             await this.authRepository.save( user );
 
-            // Llamar servicio del mail para enviar el correo
+            const createMailDto: CreateMailDto = {
+                context: { token: this.getJWT({ id: user.id, email: user.email, }) },
+                subject: 'Activación de cuenta en PAMVI',
+                template: 'register',
+                to: [user.email],
+            };
+
+            await this.mailsService.sendMail(createMailDto);
 
             return {
                 message: `Usuario registrado correctamente. Le hemos enviado un correo a ${user.email} para activar su cuenta.`,
@@ -151,7 +164,6 @@ export class AuthService {
         } catch (error) { this.handleDBException(error) }
     }
 
-    //? FALTA TERMINAR
     async sendMailForRecoveryPassword(
         sendMailRecoveryPasswordDto: SendMailRecoveryPasswordDto,
     ) {
@@ -170,7 +182,14 @@ export class AuthService {
             
             await this.tokensValidationService.create({token});
             
-            // ENVIAR EMAIL
+            const createMailDto: CreateMailDto = {
+                context: { token: this.getJWT({ id: user.id, email: user.email, }) },
+                subject: 'Recuperación de contraseña',
+                template: 'recovery-password',
+                to: [user.email],
+            };
+
+            await this.mailsService.sendMail(createMailDto);
 
             return {
                 message: `Correo enviado a ${email}`,

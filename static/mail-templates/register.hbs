@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Recuperación de contraseña exitosa</title>
+        <title>Registro</title>
         
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,14 +21,7 @@
                 text-align: center;
             }
 
-            button {
-                background-color: #063B42;
-                border: none;
-                color: #FFF;
-                padding: 15px;
-            }
-
-            button, p, small {
+            .link-redirect, p, small {
                 font-family: "Roboto", sans-serif;
                 font-weight: 100 !important;
             }
@@ -67,7 +60,7 @@
                 border-radius: 15px;
                 bottom: 90px;
                 left: 7.5%;
-                padding: 10px;
+                padding: 12.5px;
                 position: relative;
                 width: 85%;
             }
@@ -82,6 +75,13 @@
 
             .link {
                 width: 30px;
+            }
+
+            .link-redirect {
+                background-color: #063B42 !important;
+                border: none !important;
+                color: #FFF !important;
+                padding: 15px !important;
             }
 
             .mercado-pago {
@@ -111,9 +111,7 @@
 
             <section class="section-2">
                 <article>
-                    <button>Cambiar contraseña</button>
-                    <br>
-                    <p>Si usted no solicitó el cambio de contraseña ignore este correo.</p>
+                    <a href="https://pamviapp.com/{{token}}" target="_blank" class="link-redirect" style="text-transform: uppercase;">Confirmar cuenta</a>
                 </article>
             </section>
 

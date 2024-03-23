@@ -4,6 +4,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 // DTOs
 import { CreateMailDto } from './dto/create-mail.dto';
 
+// Services
+import { ConfigService } from '@nestjs/config';
+
 @Injectable()
 export class MailsService {
 
@@ -11,20 +14,22 @@ export class MailsService {
 
   constructor(
     private readonly mailerService: MailerService,
+
+    private readonly configService: ConfigService,
   ) { }
 
   async sendMail(
     createMailDto: CreateMailDto,
   ) {
-    const { from, html, subject, text, to } = createMailDto;
+    const { context, subject, template, to } = createMailDto;
 
     try {
       await this.mailerService.sendMail({
-        from,
-        html,
+        from: this.configService.get('MAIL_SENDER'),
         subject,
-        text,
-        to
+        template,
+        to,
+        context,
       });
     } catch (error) { this.handleDBException(error) }
   }

@@ -11,7 +11,7 @@ export class ScheduleTasksService {
 
   constructor(
     private readonly tokensValidationService: TokensValidationService,
-  ) {}
+  ) { }
 
   @Cron('0 2 * * *')
   async removeAllTokensValidationExpiredCron() {
