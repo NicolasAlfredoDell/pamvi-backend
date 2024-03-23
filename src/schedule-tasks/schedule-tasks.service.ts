@@ -13,7 +13,7 @@ export class ScheduleTasksService {
     private readonly tokensValidationService: TokensValidationService,
   ) {}
 
-  @Cron('0 12 * * *')
+  @Cron('0 2 * * *')
   async removeAllTokensValidationExpiredCron() {
     try {
       const message = await this.tokensValidationService.removeAllExpired();
