@@ -31,24 +31,24 @@ import { UsersModule } from './users/users.module';
     }),
 
     //* Agregar en la carpeta config los defaults
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async(configService: ConfigService) => ({
-        transport: {
-          host: configService.get<string>('MAIL_HOST'),
-          port: configService.get<string>('MAIL_PORT'),
-          secure: false,
-          auth: {
-            user: configService.get<string>('MAIL_USER'),
-            pass: configService.get<string>('MAIL_PASSWORD'),
-          },
-        },
-        defaults: {
-          from: configService.get<string>('MAIL_SENDER'),
-        },
-      }),
-    }),
+    // MailerModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async(configService: ConfigService) => ({
+    //     transport: {
+    //       host: configService.get<string>('MAIL_HOST'),
+    //       port: configService.get<string>('MAIL_PORT'),
+    //       secure: false,
+    //       auth: {
+    //         user: configService.get<string>('MAIL_USER'),
+    //         pass: configService.get<string>('MAIL_PASSWORD'),
+    //       },
+    //     },
+    //     defaults: {
+    //       from: configService.get<string>('MAIL_SENDER'),
+    //     },
+    //   }),
+    // }),
 
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -70,7 +70,7 @@ import { UsersModule } from './users/users.module';
     CommonModule,
     FilesModule,
     GenderOfUsersModule,
-    MailsModule,
+    // MailsModule,
     PetsModule,
     SeedModule,
     TokensValidationModule,

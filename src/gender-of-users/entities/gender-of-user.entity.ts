@@ -1,4 +1,7 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+// Entities
+import { User } from "src/users/entities";
 
 @Entity()
 export class GenderOfUser {
@@ -21,6 +24,13 @@ export class GenderOfUser {
 
     @Column('timestamp')
     updated_at: Date;
+
+    @OneToMany(
+        () => User,
+        (user) => user.gender,
+        { cascade: true }
+    )
+    user: User;
 
     @BeforeInsert()
     setCreatedAtAndUpdateAtInsert() {

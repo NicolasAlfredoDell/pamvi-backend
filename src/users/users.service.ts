@@ -30,14 +30,14 @@ export class UsersService {
     try {
       const { images = [], ...userDetails } = createUserDto;
 
-      const user = this.userRepository.create({
-        ...userDetails,
-        avatar: images.map( image => this.userImageRepository.create({ url: image }) )
-      });
+      // const user = this.userRepository.create({
+      //   ...userDetails,
+      //   avatar: images.map( image => this.userImageRepository.create({ url: image }) )
+      // });
       
-      await this.userRepository.save( user );
+      // await this.userRepository.save( user );
 
-      return { ...user, images };
+      // return { ...user, images };
     } catch (error) { this.handleDBException(error) }
   }
 
@@ -207,8 +207,15 @@ export class UsersService {
   private handleDBException(
     error: any,
   ) {
-    if (error.code === `23505`)
+    if ( error.code === '23505' ) {
+      if ( error.detail.includes('Key (dni)') )
+          throw new BadRequestException(`El dni ya se encuentra registrado.`);
+      
+      if ( error.detail.includes('Key (email)') )
+        throw new BadRequestException(`El correo ya se encuentra registrado.`);
+
       throw new BadRequestException(error.detail);
+    }
     
     this.logger.error(error);
     throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);

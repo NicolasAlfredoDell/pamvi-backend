@@ -42,17 +42,6 @@ export class GenderOfUsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
-  async removeAll() {
-    const query = this.genderOfUserRepository.createQueryBuilder('gender-of-users');
-
-    try {
-      return await query
-        .delete()
-        .where({})
-        .execute();
-    } catch (error) { this.handleDBException(error) }
-  }
-
   async disabled(
     id: string,
   ) {
@@ -149,6 +138,21 @@ export class GenderOfUsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
+  async removeAll() {
+    const query = this.genderOfUserRepository.createQueryBuilder('gender-of-users');
+
+    try {
+      await query
+        .delete()
+        .where({})
+        .execute();
+
+      return {
+        message: `Géneros eliminados correctamente.`,
+      };
+    } catch (error) { this.handleDBException(error) }
+  }
+
   async update(
     id: string,
     updateGenderOfUserDto: UpdateGenderOfUserDto,
@@ -188,8 +192,12 @@ export class GenderOfUsersService {
   private handleDBException(
     error: any,
   ) {
-    if (error.code === `23505`)
+    if ( error.code === '23505' ) {
+      if ( error.detail.includes('Key (name)') )
+          throw new BadRequestException(`El nombre ya se encuentra registrado.`);
+
       throw new BadRequestException(error.detail);
+    }
     
     this.logger.error(error);
     throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);

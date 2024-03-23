@@ -46,6 +46,7 @@ export const initialData: SeedData = {
             dni: '36302765',
             email: 'nicolasalfredodell@gmail.com',
             facebook: 'https://www.facebook.com/Nicolassdell/',
+            gender: '123',
             instagram: 'https://www.instagram.com/dellnicoo/',
             lastnames: 'Dell',
             names: 'Nicolás Alfredo',

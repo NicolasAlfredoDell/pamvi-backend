@@ -186,8 +186,12 @@ export class TypesOfUsersService {
   private handleDBException(
     error: any,
   ) {
-    if (error.code === `23505`)
+    if ( error.code === '23505' ) {
+      if ( error.detail.includes('Key (name)') )
+          throw new BadRequestException(`El nombre ya se encuentra registrado.`);
+
       throw new BadRequestException(error.detail);
+    }
     
     this.logger.error(error);
     throw new InternalServerErrorException(`Error inesperado, verifique los logs.`);

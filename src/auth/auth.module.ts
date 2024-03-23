@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 
 // Modules
+import { GenderOfUsersModule } from 'src/gender-of-users/gender-of-users.module';
 import { TokensValidationModule } from 'src/tokens-validation/tokens-validation.module';
 import { UsersModule } from 'src/users/users.module';
 
@@ -26,6 +27,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   ],
   imports: [
     ConfigModule,
+    GenderOfUsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [

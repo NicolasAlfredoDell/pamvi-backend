@@ -10,6 +10,7 @@ export interface SeedUser {
     dni:             string;
     email:           string;
     facebook?:       string;
+    gender:          string;
     instagram?:      string;
     lastnames:       string;
     names:           string;

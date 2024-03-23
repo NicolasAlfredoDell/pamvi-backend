@@ -19,6 +19,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interfaces';
 // Services
 import { TokensValidationService } from '../tokens-validation/tokens-validation.service';
 import { UsersService } from '../users/users.service';
+import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +32,8 @@ export class AuthService {
         
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+
+        private readonly genderOfUsersService: GenderOfUsersService,
 
         private readonly jwtService: JwtService,
 
@@ -48,7 +51,7 @@ export class AuthService {
             throw new UnauthorizedException(`Debe volver a solicitar el correo para la activación de su cuenta.`);
         
         try {
-            this.usersService.enabled(id);
+            await this.usersService.enabled(id);
 
             return {
                 message: `Cuenta activada`,
@@ -61,20 +64,21 @@ export class AuthService {
     ) {
         const { password, email } = loginUserDto;
 
-        try {
-            const user = await this.userRepository.findOne({
-                where: { email },
-                select: { email: true, password: true, id: true },
-            });
-    
-            if ( !user || !bcrypt.compareSync( password, user.password ) )
-                throw new UnauthorizedException('Usuario y/o contraseña incorrectas.');
-    
-            return {
-                message: 'Logueado correctamente.',
-                token: this.getJWT({ id: user.id, email: user.email, }),
-            };
-        } catch (error) { this.handleDBException(error) }
+        const user = await this.userRepository.findOne({
+            where: { email },
+            select: { email: true, password: true, disabled: true, id: true },
+        });
+
+        if ( user.disabled )
+            throw new UnauthorizedException('Cuenta deshabilitada.');
+
+        if ( !user || !bcrypt.compareSync( password, user.password ) )
+            throw new UnauthorizedException('Usuario y/o contraseña incorrectas.');
+
+        return {
+            message: 'Logueado correctamente.',
+            token: this.getJWT({ id: user.id, email: user.email, }),
+        };
     }
 
     async recoveryPassword(
@@ -120,15 +124,21 @@ export class AuthService {
     async register(
         createUserDto: CreateUserDto,
     ) {
-        const { password, passwordConfirm, ...userDetails } = createUserDto;
-
+        const { gender, password, passwordConfirm, ...userDetails } = createUserDto;
+        
         if ( password !== passwordConfirm )
             throw new BadRequestException(`Las contraseñas no son iguales.`);
 
         try {
+            const genderDB = await this.genderOfUsersService.findOne(gender);
+
+            if ( !genderDB )
+                throw new BadRequestException(`El género no existe.`);
+
             const user = this.authRepository.create({
                 ...userDetails,
-                password: bcrypt.hashSync(password, 10)
+                gender: genderDB,
+                password: bcrypt.hashSync(password, 10),
             });
 
             await this.authRepository.save( user );

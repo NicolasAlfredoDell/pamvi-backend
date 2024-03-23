@@ -1,5 +1,7 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
+// Entities
+import { GenderOfUser } from 'src/gender-of-users/entities/gender-of-user.entity';
 import { UserImage } from "./user-image.entity";
 
 @Entity()
@@ -38,6 +40,13 @@ export class User {
     })
     facebook: string;
 
+    @ManyToOne(
+        () => GenderOfUser,
+        (genderOfUser) => genderOfUser.user,
+        { onDelete: 'CASCADE' }
+    )
+    gender: GenderOfUser;
+
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -71,7 +80,6 @@ export class User {
     @Column('int')
     years: number;
 
-    // FALTA GENERO
     // FALTA TIPO DE USUARIO
     // FALTA LOCACION
 

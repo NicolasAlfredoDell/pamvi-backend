@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString,
-    IsUrl, Matches, MaxDate, MaxLength, MinDate, MinLength } from 'class-validator';
+    IsUUID, IsUrl, Matches, MaxDate, MaxLength, MinDate, MinLength } from 'class-validator';
 
 export class CreateUserDto {
 
@@ -28,6 +28,11 @@ export class CreateUserDto {
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })
     facebook?: string;
+
+    @IsDefined({ message: 'El género debe estar definido' })
+    @IsUUID('4', { message: 'El género debe ser un UUID' })
+    @IsNotEmpty({ message: 'El género no puede estar vacío' })
+    gender: string;
 
     @ArrayMinSize(1)
     @ArrayMaxSize(1)

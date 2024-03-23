@@ -47,11 +47,9 @@ export class GenderOfUsersController {
     return this.genderOfUsersService.remove(id);
   }
 
-  @Delete(':id')
+  @Delete()
   // @Auth(ValidRoles.superUser)
-  removeAll(
-    @Param('id', ParseUUIDPipe) id: string,
-  ) {
+  removeAll() {
     return this.genderOfUsersService.removeAll();
   }
 
