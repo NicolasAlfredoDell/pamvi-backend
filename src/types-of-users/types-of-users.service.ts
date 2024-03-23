@@ -40,17 +40,6 @@ export class TypesOfUsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
-  async removeAll() {
-    const query = this.typesOfUsersServiceRepository.createQueryBuilder('types-of-users');
-
-    try {
-      return await query
-        .delete()
-        .where({})
-        .execute();
-    } catch (error) { this.handleDBException(error) }
-  }
-
   async disabled(
     id: string,
   ) {
@@ -147,6 +136,21 @@ export class TypesOfUsersService {
     } catch (error) { this.handleDBException(error) }
   }
 
+  async removeAll() {
+    const query = this.typesOfUsersServiceRepository.createQueryBuilder('types-of-users');
+
+    try {
+      await query
+        .delete()
+        .where({})
+        .execute();
+
+      return {
+        message: 'Se eliminaron todos los tipos correctamente',
+      }
+    } catch (error) { this.handleDBException(error) }
+  }
+
   async update(
     id: string,
     updateTypesOfUserDto: UpdateTypesOfUserDto,
@@ -188,7 +192,7 @@ export class TypesOfUsersService {
   ) {
     if ( error.code === '23505' ) {
       if ( error.detail.includes('Key (name)') )
-          throw new BadRequestException(`El nombre ya se encuentra registrado.`);
+        throw new BadRequestException(`El nombre ya se encuentra registrado.`);
 
       throw new BadRequestException(error.detail);
     }

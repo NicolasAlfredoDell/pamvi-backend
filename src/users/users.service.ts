@@ -34,18 +34,18 @@ export class UsersService {
   async create(
     createUserDto: CreateUserDto,
   ) {
+    const { gender, images = [], ...userDetails } = createUserDto;
+
+    const genderDB = await this.genderOfUsersService.findOne(gender);
+
+    if ( !genderDB )
+      throw new BadRequestException(`El género no existe.`);
+
+    if ( genderDB.disabled )
+      throw new BadRequestException(`El género está deshabilitado.`);
+
     try {
-      const { gender, images = [], ...userDetails } = createUserDto;
-
-      const genderDB = await this.genderOfUsersService.findOne(gender);
-
-      if ( !genderDB )
-        throw new BadRequestException(`El género no existe.`);
-
-      if ( genderDB.disabled )
-        throw new BadRequestException(`El género está deshabilitado.`);
-
-      const user = this.userRepository.create({
+      const user = await this.userRepository.create({
         ...userDetails,
         avatar: images.map( image => this.userImageRepository.create({ url: image }) ),
         gender: genderDB,
@@ -139,7 +139,9 @@ export class UsersService {
     return user;
   }
 
-  async findOnePlain( term: string ) {
+  async findOnePlain(
+    term: string,
+  ) {
     const { avatar = [], ...rest } = await this.findOne( term );
     
     return {
