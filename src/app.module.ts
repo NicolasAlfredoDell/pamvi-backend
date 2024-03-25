@@ -53,7 +53,7 @@ import { UsersModule } from './users/users.module';
         },
         template: {
           dir: join(__dirname, '../static/mail-templates'),
-          // adapter: new HandlebarsAdapter(),
+          adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
           }
