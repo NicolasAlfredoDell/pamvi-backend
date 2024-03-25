@@ -35,7 +35,6 @@ import { UsersModule } from './users/users.module';
       validationSchema: JoiValidationSchema,
     }),
 
-    //* Agregar en la carpeta config los defaults
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
