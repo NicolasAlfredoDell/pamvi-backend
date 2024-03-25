@@ -23,6 +23,7 @@ import { MailsModule } from './mails/mails.module';
 import { PetsModule } from './pets/pets.module';
 import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { SeedModule } from './seed/seed.module';
+import { SpeciesOfAnimalsModule } from './species-of-animals/species-of-animals.module';
 import { TokensValidationModule } from './tokens-validation/tokens-validation.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
 import { UsersModule } from './users/users.module';
@@ -51,8 +52,8 @@ import { UsersModule } from './users/users.module';
           from: configService.get<string>('MAIL_SENDER'),
         },
         template: {
-          dir:join(__dirname, '../static/mail-templates'),
-          adapter: new HandlebarsAdapter(),
+          dir: join(__dirname, '../static/mail-templates'),
+          // adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
           }
@@ -86,6 +87,7 @@ import { UsersModule } from './users/users.module';
     PetsModule,
     ScheduleTasksModule,
     SeedModule,
+    SpeciesOfAnimalsModule,
     TokensValidationModule,
     TypesOfUsersModule,
     UsersModule,

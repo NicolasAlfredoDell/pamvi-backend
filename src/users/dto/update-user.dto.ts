@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsNotEmpty, IsOptional, IsString, IsUrl,
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsDefined, IsNotEmpty, IsOptional, IsString, IsUUID, IsUrl,
     Matches, MaxDate, MinDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -15,6 +15,11 @@ export class UpdateUserDto {
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })
     facebook?: string;
+
+    @IsDefined({ message: 'El género debe estar definido' })
+    @IsUUID('4', { message: 'El género debe ser un UUID' })
+    @IsNotEmpty({ message: 'El género no puede estar vacío' })
+    gender: string;
 
     @ArrayMinSize(1)
     @ArrayMaxSize(1)
@@ -38,6 +43,11 @@ export class UpdateUserDto {
     @IsString({ message: 'El o los nombres deben tener letras' })
     @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/, { message: 'El o los nombres deben tener solo letras' })
     names?: string;
+
+    @IsDefined({ message: 'El tipo de usuario debe estar definido' })
+    @IsUUID('4', { message: 'El tipo de usuario debe ser un UUID' })
+    @IsNotEmpty({ message: 'El tipo de usuario no puede estar vacío' })
+    typeOfUser: string;
 
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })

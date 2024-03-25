@@ -17,6 +17,7 @@ export interface SeedUser {
     password:        string;
     passwordConfirm: string,
     slug:            string;
+    typeOfUser:      string;
     twitter?:        string;
     updated_at?:     Date;
     years:           number;

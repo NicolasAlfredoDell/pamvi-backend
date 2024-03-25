@@ -21,6 +21,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interfaces';
 import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
 import { MailsService } from '../mails/mails.service';
 import { TokensValidationService } from '../tokens-validation/tokens-validation.service';
+import { TypesOfUsersService } from '../types-of-users/types-of-users.service';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -40,6 +41,8 @@ export class AuthService {
         private readonly jwtService: JwtService,
 
         private readonly mailsService: MailsService,
+
+        private readonly typesOfUsersService: TypesOfUsersService,
 
         private tokensValidationService: TokensValidationService,
 
@@ -127,24 +130,27 @@ export class AuthService {
     async register(
         createUserDto: CreateUserDto,
     ) {
-        const { gender, password, passwordConfirm, ...userDetails } = createUserDto;
+        const { gender, password, passwordConfirm, typeOfUser, ...userDetails } = createUserDto;
         
         if ( password !== passwordConfirm )
             throw new BadRequestException(`Las contraseñas no son iguales.`);
 
         const genderDB = await this.genderOfUsersService.findOne(gender);
     
-        if ( !genderDB )
-            throw new BadRequestException(`El género no existe.`);
-    
         if ( genderDB.disabled )
             throw new BadRequestException(`El género está deshabilitado.`);
+
+        const typeOfUserDB = await this.typesOfUsersService.findOne(typeOfUser);
+    
+        if ( typeOfUserDB.disabled )
+            throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
         try {
             const user = this.authRepository.create({
                 ...userDetails,
                 gender: genderDB,
                 password: bcrypt.hashSync(password, 10),
+                typeOfUser: typeOfUserDB,
             });
 
             await this.authRepository.save( user );

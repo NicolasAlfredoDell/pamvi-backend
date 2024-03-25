@@ -1,26 +1,26 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Query, ParseUUIDPipe } from '@nestjs/common';
 
 // DTOs
-import { CreatePetDto, UpdatePetDto } from './dto';
+import { CreateSpeciesOfAnimalDto, UpdateSpeciesOfAnimalDto } from './dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Services
-import { PetsService } from './pets.service';
+import { SpeciesOfAnimalsService } from './species-of-animals.service';
 
-@Controller('pets')
-export class PetsController {
-
+@Controller('species-of-animals')
+export class SpeciesOfAnimalsController {
+  
   constructor(
-    private readonly petsService: PetsService,
+    private readonly speciesOfAnimalsService: SpeciesOfAnimalsService,
   ) {}
 
   @Post()
   // @Auth(ValidRoles.superUser, ValidRoles.admin)
   @UsePipes(ValidationPipe)
   create(
-    @Body() createPetDto: CreatePetDto,
+    @Body() createSpeciesOfAnimalDto: CreateSpeciesOfAnimalDto,
   ) {
-    return this.petsService.create(createPetDto);
+    return this.speciesOfAnimalsService.create(createSpeciesOfAnimalDto);
   }
 
   @Get()
@@ -28,15 +28,15 @@ export class PetsController {
   findAll(
     @Query() paginationDto: PaginationDto,
   ) {
-    return this.petsService.findAll(paginationDto);
+    return this.speciesOfAnimalsService.findAll(paginationDto);
   }
 
   @Get(':id')
-   // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
   findOne(
     @Param('id') id: string,
   ) {
-    return this.petsService.findOne(id);
+    return this.speciesOfAnimalsService.findOne(id);
   }
 
   @Delete(':id')
@@ -44,7 +44,7 @@ export class PetsController {
   remove(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.petsService.remove(id);
+    return this.speciesOfAnimalsService.remove(id);
   }
 
   @Delete(':id')
@@ -52,7 +52,7 @@ export class PetsController {
   removeAll(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.petsService.removeAll();
+    return this.speciesOfAnimalsService.removeAll();
   }
 
   @Patch('disabled/:id')
@@ -60,7 +60,7 @@ export class PetsController {
   disabled(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.petsService.disabled(id);
+    return this.speciesOfAnimalsService.disabled(id);
   }
 
   @Patch('enabled/:id')
@@ -68,16 +68,15 @@ export class PetsController {
   enabled(
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.petsService.enabled(id);
+    return this.speciesOfAnimalsService.enabled(id);
   }
 
   @Patch(':id')
-  // @Auth(ValidRoles.superUser, ValidRoles.admin)
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updatePetDto: UpdatePetDto,
+    @Body() updateSpeciesOfAnimalDto: UpdateSpeciesOfAnimalDto,
   ) {
-    return this.petsService.update(id, updatePetDto);
+    return this.speciesOfAnimalsService.update(id, updateSpeciesOfAnimalDto);
   }
 
 }

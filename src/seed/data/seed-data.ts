@@ -53,6 +53,7 @@ export const initialData: SeedData = {
             password: '123',
             passwordConfirm: '123',
             slug: 'Nicolas_Dell_36302765',
+            typeOfUser: '123',
             twitter: 'https://twitter.com/dellnicoo',
             updated_at: null,
             years: 31,

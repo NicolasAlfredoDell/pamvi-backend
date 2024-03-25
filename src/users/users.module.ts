@@ -11,6 +11,7 @@ import { User, UserImage } from './entities';
 
 // Modules
 import { GenderOfUsersModule } from 'src/gender-of-users/gender-of-users.module';
+import { TypesOfUsersModule } from 'src/types-of-users/types-of-users.module';
 
 // Services
 import { UsersService } from './users.service';
@@ -26,6 +27,7 @@ import { UsersService } from './users.service';
     ConfigModule,
     GenderOfUsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    TypesOfUsersModule,
     TypeOrmModule.forFeature([ User, UserImage ]),
   ],
   exports: [

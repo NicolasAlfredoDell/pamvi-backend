@@ -2,7 +2,9 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, Prima
 
 // Entities
 import { GenderOfUser } from 'src/gender-of-users/entities/gender-of-user.entity';
+import { TypesOfUser } from 'src/types-of-users/entities/types-of-user.entity';
 import { UserImage } from "./user-image.entity";
+import { Pet } from "src/pets/entities/pet.entity";
 
 @Entity()
 export class User {
@@ -68,6 +70,13 @@ export class User {
 
     @Column('text')
     slug: string;
+
+    @OneToMany(
+        () => Pet,
+        (pet) => pet.user,
+        { cascade: true }
+    )
+    typeOfUser: TypesOfUser;
 
     @Column('text', {
         nullable: true,

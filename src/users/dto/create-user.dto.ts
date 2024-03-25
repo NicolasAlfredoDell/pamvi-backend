@@ -71,6 +71,11 @@ export class CreateUserDto {
     @IsString({ message: 'La confirmación de la contrseña debe ser una cadena de caracteres' })
     passwordConfirm: string;
 
+    @IsDefined({ message: 'El tipo de usuario debe estar definido' })
+    @IsUUID('4', { message: 'El tipo de usuario debe ser un UUID' })
+    @IsNotEmpty({ message: 'El tipo de usuario no puede estar vacío' })
+    typeOfUser: string;
+
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })
     twitter?: string;

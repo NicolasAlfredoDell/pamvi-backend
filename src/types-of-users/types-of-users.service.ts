@@ -32,10 +32,11 @@ export class TypesOfUsersService {
         ...typeOfUsersDetails,
       });
       
-      await this.typesOfUsersServiceRepository.save( typeOfUser );
+      const typeOfUserDB = await this.typesOfUsersServiceRepository.save( typeOfUser );
 
       return {
         message: `Tipo de usuario creado correctamente.`,
+        typeOfUsers: [typeOfUserDB]
       };
     } catch (error) { this.handleDBException(error) }
   }
@@ -92,7 +93,7 @@ export class TypesOfUsersService {
 
     return {
       totals: await this.typesOfUsersServiceRepository.count(),
-      typesOfUsers: typesOfUsers,
+      typesOfUsers: [typesOfUsers],
     }
   }
 

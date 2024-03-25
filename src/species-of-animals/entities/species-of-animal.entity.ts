@@ -1,10 +1,11 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entites
+import { Pet } from 'src/pets/entities/pet.entity';
 import { User } from 'src/users/entities';
 
 @Entity()
-export class TypesOfUser {
+export class SpeciesOfAnimals {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -21,6 +22,13 @@ export class TypesOfUser {
         unique: true,
     })
     name: string;
+
+    @OneToMany(
+        () => Pet,
+        (pet) => pet.specie,
+        { cascade: true }
+    )
+    pet: Pet;
 
     @Column('timestamp')
     updated_at: Date;

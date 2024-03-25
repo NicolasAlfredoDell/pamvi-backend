@@ -2,6 +2,38 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
+# Versiones utilizadas
+
+Yarn: Version 1.22.22
+Ejecutar:
+```
+yarn -v
+```
+
+Npm: Version 9.5.1
+Ejecutar:
+```
+npm -v
+```
+
+Nest: Version 9.5.0
+Ejecutar:
+```
+nest -v
+```
+
+Node: Version 18.16.0
+Ejecutar:
+```
+node -v
+```
+
+Typescript: Version 5.0.4
+Ejecutar:
+```
+tsc -v
+```
+
 # Ejecutar en desarrollo
 
 1. Clonar el repositorio.

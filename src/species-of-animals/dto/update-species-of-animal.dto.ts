@@ -1,6 +1,6 @@
 import { IsDefined, IsNotEmpty, IsString, Matches } from 'class-validator';
 
-export class CreateTypesOfUserDto {
+export class UpdateSpeciesOfAnimalDto {
 
     @IsDefined({ message: 'El nombre debe estar definido' })
     @IsNotEmpty({ message: 'El nombre no puede estar vacío' })

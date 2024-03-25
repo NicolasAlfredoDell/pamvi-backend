@@ -10,6 +10,7 @@ import { AuthController } from './auth.controller';
 import { GenderOfUsersModule } from 'src/gender-of-users/gender-of-users.module';
 import { MailsModule } from 'src/mails/mails.module';
 import { TokensValidationModule } from 'src/tokens-validation/tokens-validation.module';
+import { TypesOfUsersModule } from 'src/types-of-users/types-of-users.module';
 import { UsersModule } from 'src/users/users.module';
 
 // Services
@@ -31,6 +32,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     GenderOfUsersModule,
     MailsModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    TypesOfUsersModule,
     JwtModule.registerAsync({
       imports: [
         ConfigModule,

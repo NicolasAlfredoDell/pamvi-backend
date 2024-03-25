@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { validate as isUUID } from 'uuid';
 
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 
 // Dtos
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
@@ -13,6 +13,7 @@ import { User, UserImage } from './entities';
 
 // Services
 import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
+import { TypesOfUsersService } from 'src/types-of-users/types-of-users.service';
 
 @Injectable()
 export class UsersService {
@@ -29,26 +30,31 @@ export class UsersService {
     private readonly dataSource: DataSource,
 
     private readonly genderOfUsersService: GenderOfUsersService,
-  ) {}
+
+    private readonly typeOfUsersService: TypesOfUsersService,
+  ) { }
 
   async create(
     createUserDto: CreateUserDto,
   ) {
-    const { gender, images = [], ...userDetails } = createUserDto;
+    const { gender, images = [], typeOfUser, ...userDetails } = createUserDto;
 
     const genderDB = await this.genderOfUsersService.findOne(gender);
 
-    if ( !genderDB )
-      throw new BadRequestException(`El género no existe.`);
-
     if ( genderDB.disabled )
       throw new BadRequestException(`El género está deshabilitado.`);
+
+    const typeOfUserDB = await this.typeOfUsersService.findOne(typeOfUser);
+
+    if ( typeOfUserDB.disabled )
+      throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
     try {
       const user = await this.userRepository.create({
         ...userDetails,
         avatar: images.map( image => this.userImageRepository.create({ url: image }) ),
         gender: genderDB,
+        typeOfUser: typeOfUserDB,
       });
       
       await this.userRepository.save( user );
@@ -183,11 +189,23 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
   ) {
-    const { images = [], ...userDeatils } = updateUserDto;
+    const { gender, images = [], typeOfUser, ...userDetails } = updateUserDto;
+
+    const genderDB = await this.genderOfUsersService.findOne(gender);
+
+    if ( genderDB.disabled )
+      throw new BadRequestException(`El género está deshabilitado.`);
+
+    const typeOfUserDB = await this.typeOfUsersService.findOne(typeOfUser);
+
+    if ( typeOfUserDB.disabled )
+      throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
     const user = await this.userRepository.preload({
       id,
-      ...userDeatils,
+      ...userDetails,
+      gender: genderDB,
+      typeOfUser: typeOfUserDB,
       //? ESTO SIRVE PARA EL CREATE
       //? avatar: images.map( ( image ) => this.userImageRepository.create({ url: image }) )
     });

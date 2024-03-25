@@ -392,6 +392,11 @@
   resolved "https://registry.yarnpkg.com/@css-inline/css-inline-win32-x64-msvc/-/css-inline-win32-x64-msvc-0.13.0.tgz#245061fb1500749c7ddc0fa6e005dc04281bccd0"
   integrity sha512-6VFhFSXp4FH+NzJhLd6fFi7jKCPvIRW+vq0tV+CPuiQ3zPzMfC9nIk8sB/1VJR8EcvBAjMV53YnacuDjRFRT9g==
 
+"@css-inline/css-inline-win32-x64-msvc@^0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@css-inline/css-inline-win32-x64-msvc/-/css-inline-win32-x64-msvc-0.13.1.tgz#d5ea4d921d9724c0e6c99be1ba7d57e485315d3f"
+  integrity sha512-+LxH/kkDYWOcyJsutBM/0jFxiF/lYhrG1mu1K1/85p2Bc9Aldd/dGBmGu7GSNQwGsKYZLWsIeNNdehT7YfOj5A==
+
 "@css-inline/css-inline@0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@css-inline/css-inline/-/css-inline-0.13.0.tgz#11ae563c220330a5e88ea3ff0b4f9782cd53b806"
@@ -779,11 +784,11 @@
     tslib "2.6.2"
 
 "@nestjs/config@^3.1.1":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/config/-/config-3.2.0.tgz#4ca70f88b0636f86741ba192dd51dd2f01eaa7c1"
-  integrity sha512-BpYRn57shg7CH35KGT6h+hT7ZucB6Qn2B3NBNdvhD4ApU8huS5pX/Wc2e/aO5trIha606Bz2a9t9/vbiuTBTww==
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/config/-/config-3.2.1.tgz#6b264564e70a8d639734e9a583ad1d2ac5351588"
+  integrity sha512-tFZyLJKanSAu51ygQ6ZBSpx95pRcwS6qSpJDW6FFgRQzkOaOUXpL8qD8yMNoYoYxuJCxph+waiBaWKgFWxn3sw==
   dependencies:
-    dotenv "16.4.1"
+    dotenv "16.4.5"
     dotenv-expand "10.0.0"
     lodash "4.17.21"
     uuid "9.0.1"
@@ -964,9 +969,9 @@
   integrity sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw==
 
 "@tsconfig/node10@^1.0.7":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.9.tgz#df4907fc07a886922637b15e02d4cebc4c0021b2"
-  integrity sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.10.tgz#b7ebd3adfa7750628d100594f6726b054d2c33b2"
+  integrity sha512-PiaIWIoPvO6qm6t114ropMCagj6YAF24j9OkCA2mJDXFnlionEwhsBCJ8yek4aib575BI3OkART/90WsgHgLWw==
 
 "@tsconfig/node12@^1.0.7":
   version "1.0.11"
@@ -2600,12 +2605,7 @@ dotenv-expand@10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-10.0.0.tgz#12605d00fb0af6d0a592e6558585784032e4ef37"
   integrity sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==
 
-dotenv@16.4.1:
-  version "16.4.1"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.1.tgz#1d9931f1d3e5d2959350d1250efab299561f7f11"
-  integrity sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==
-
-dotenv@^16.0.3:
+dotenv@16.4.5, dotenv@^16.0.3:
   version "16.4.5"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.5.tgz#cdd3b3b604cb327e286b4762e13502f717cb099f"
   integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
