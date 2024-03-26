@@ -19,6 +19,7 @@ export class TypesOfUsersService {
   constructor(
     @InjectRepository(TypesOfUser)
     private readonly typesOfUsersServiceRepository: Repository<TypesOfUser>,
+
     private readonly dataSource: DataSource,
   ) {}
 
@@ -84,7 +85,7 @@ export class TypesOfUsersService {
   async findAll(
     paginationDto: PaginationDto,
   ) {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit = 10, offset = 0, } = paginationDto;
 
     const typesOfUsers = await this.typesOfUsersServiceRepository.find({
       take: limit,
@@ -115,7 +116,9 @@ export class TypesOfUsersService {
     return typesOfUsers;
   }
 
-  async findOnePlain( term: string ) {
+  async findOnePlain(
+    term: string,
+  ) {
     const { ...rest } = await this.findOne( term );
     
     return {

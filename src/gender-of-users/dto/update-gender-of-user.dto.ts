@@ -1,11 +1,6 @@
-import { IsDefined, IsNotEmpty, IsString, Matches } from "class-validator";
+import { PartialType } from '@nestjs/mapped-types';
 
-export class UpdateGenderOfUserDto {
+// DTOs
+import { CreateGenderOfUserDto } from '.';
 
-    @IsDefined({ message: 'Debe enviar el nombre' })
-    @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
-    @IsString({ message: 'El nombre debe tener letras' })
-    @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/, { message: 'El nombre debe tener solo letras' })
-    name: string;
-
-}
+export class UpdateGenderOfUserDto extends PartialType(CreateGenderOfUserDto) { }
