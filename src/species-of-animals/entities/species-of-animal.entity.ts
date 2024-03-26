@@ -2,7 +2,6 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGenerated
 
 // Entites
 import { Pet } from 'src/pets/entities/pet.entity';
-import { User } from 'src/users/entities';
 
 @Entity()
 export class SpeciesOfAnimals {
@@ -32,13 +31,6 @@ export class SpeciesOfAnimals {
 
     @Column('timestamp')
     updated_at: Date;
-
-    @OneToMany(
-        () => User,
-        (user) => user.gender,
-        { cascade: true }
-    )
-    user: User;
 
     @BeforeInsert()
     setCreatedAtAndUpdateAtInsert() {

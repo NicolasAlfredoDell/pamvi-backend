@@ -12,6 +12,11 @@ export class TypesOfUser {
     @Column('timestamp')
     created_at: Date;
 
+    @Column('text', {
+        nullable: true,
+    })
+    description: string;
+
     @Column('boolean', {
         default: false,
     })
@@ -27,7 +32,7 @@ export class TypesOfUser {
 
     @OneToMany(
         () => User,
-        (user) => user.gender,
+        (user) => user.typeOfUser,
         { cascade: true }
     )
     user: User;

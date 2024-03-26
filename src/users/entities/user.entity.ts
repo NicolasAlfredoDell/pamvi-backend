@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 // Entities
 import { GenderOfUser } from 'src/gender-of-users/entities/gender-of-user.entity';
@@ -79,6 +79,13 @@ export class User {
         { cascade: true }
     )
     pet: Pet;
+
+    @OneToOne(
+        () => Pet,
+        (pet) => pet.userTemporallyBeneficiary,
+        { onDelete: 'CASCADE', nullable: true }
+    )
+    petForAdopt: User;
 
     @Column('text', {
         nullable: true,

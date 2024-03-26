@@ -21,15 +21,10 @@ export class MailsService {
   async sendMail(
     createMailDto: CreateMailDto,
   ) {
-    const { context, subject, template, to } = createMailDto;
-
     try {
       await this.mailerService.sendMail({
         from: this.configService.get('MAIL_SENDER'),
-        subject,
-        template,
-        to,
-        context,
+        ...createMailDto
       });
     } catch (error) { this.handleDBException(error) }
   }

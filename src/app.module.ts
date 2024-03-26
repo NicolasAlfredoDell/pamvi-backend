@@ -17,6 +17,7 @@ import { JoiValidationSchema } from './config/joi.validation';
 import { AdversitingModule } from './adversiting/adversiting.module';
 import { AuthModule } from './auth/auth.module';
 import { BreedOfAnimalsModule } from './breed-of-animals/breed-of-animals.module';
+import { ColorsModule } from './colors/colors.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
 import { GenderOfAnimalsModule } from './gender-of-animals/gender-of-animals.module';
@@ -29,7 +30,6 @@ import { SpeciesOfAnimalsModule } from './species-of-animals/species-of-animals.
 import { TokensValidationModule } from './tokens-validation/tokens-validation.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
 import { UsersModule } from './users/users.module';
-import { ColorsModule } from './colors/colors.module';
 
 @Module({
   imports: [
@@ -83,6 +83,7 @@ import { ColorsModule } from './colors/colors.module';
     AdversitingModule,
     AuthModule,
     BreedOfAnimalsModule,
+    ColorsModule,
     CommonModule,
     FilesModule,
     GenderOfAnimalsModule,
@@ -95,7 +96,6 @@ import { ColorsModule } from './colors/colors.module';
     TokensValidationModule,
     TypesOfUsersModule,
     UsersModule,
-    ColorsModule,
   ],
   controllers: [],
   providers: [],

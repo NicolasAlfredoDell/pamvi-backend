@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
 import { BreedOfAnimal } from 'src/breed-of-animals/entities/breed-of-animal.entity';
@@ -79,10 +79,18 @@ export class Pet {
 
     @ManyToOne(
         () => User,
-        (user) => user.gender,
+        (user) => user.pet,
         { onDelete: 'CASCADE' }
     )
     userOwner: User;
+
+    @OneToOne(
+        () => User,
+        (user) => user.petForAdopt,
+        { onDelete: 'CASCADE', nullable: true }
+    )
+    @JoinColumn()
+    userTemporallyBeneficiary: User;
 
     @Column('decimal', {
         nullable: true,
