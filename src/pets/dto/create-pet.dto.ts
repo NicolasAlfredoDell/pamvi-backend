@@ -52,7 +52,7 @@ export class CreatePetDto {
     @IsDefined({ message: 'El usuario debe estar definido' })
     @IsUUID('4', { message: 'El usuario debe ser un UUID' })
     @IsNotEmpty({ message: 'El usuario no puede estar vacío' })
-    user: string;
+    userOwner: string;
 
     @IsNumber({}, { message: 'El peso debe ser en número' })
     @IsOptional()

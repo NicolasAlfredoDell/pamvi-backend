@@ -75,15 +75,22 @@ export class User {
 
     @OneToMany(
         () => Pet,
-        (pet) => pet.user,
+        (pet) => pet.userOwner,
         { cascade: true }
     )
-    typeOfUser: TypesOfUser;
+    pet: Pet;
 
     @Column('text', {
         nullable: true,
     })
     twitter: string;
+
+    @ManyToOne(
+        () => TypesOfUser,
+        (typeOfUser) => typeOfUser.user,
+        { onDelete: 'CASCADE' }
+    )
+    typeOfUser: TypesOfUser;
 
     @Column('timestamp')
     updated_at: Date;

@@ -46,14 +46,14 @@ export class PetsService {
     createPetDto: CreatePetDto,
   ) {
     try {
-      const { breed, gender, predominantColor, specie, user, ...petDetails } = createPetDto;
+      const { breed, gender, predominantColor, specie, userOwner, ...petDetails } = createPetDto;
 
       let createPet: any = {
         ...petDetails,
       };
 
-      if ( user ) {
-        const userDB = await this.userService.findOne(user);
+      if ( userOwner ) {
+        const userDB = await this.userService.findOne(userOwner);
 
         if ( userDB.disabled )
           throw new BadRequestException(`El usuario está deshabilitado.`);
@@ -62,7 +62,7 @@ export class PetsService {
       }
 
       if ( specie ) {
-        const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(user);
+        const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(specie);
 
         if ( specieOfAnimalsDB.disabled )
           throw new BadRequestException(`La especie de animal está deshabilitado.`);
@@ -225,14 +225,14 @@ export class PetsService {
     id: string,
     updatePetDto: UpdatePetDto,
   ) {
-    const { breed, gender, predominantColor, specie, user, ...petDeatils } = updatePetDto;
+    const { breed, gender, predominantColor, specie, userOwner, ...petDeatils } = updatePetDto;
 
     let createPet: any = {
       ...petDeatils
     };
 
-    if ( user ) {
-      const userDB = await this.userService.findOne(user);
+    if ( userOwner ) {
+      const userDB = await this.userService.findOne(userOwner);
 
       if ( userDB.disabled )
         throw new BadRequestException(`El usuario está deshabilitado.`);
@@ -241,7 +241,7 @@ export class PetsService {
     }
 
     if ( specie ) {
-      const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(user);
+      const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(specie);
 
       if ( specieOfAnimalsDB.disabled )
         throw new BadRequestException(`La especie de animal está deshabilitado.`);

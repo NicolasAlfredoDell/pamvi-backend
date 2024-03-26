@@ -82,7 +82,7 @@ export class Pet {
         (user) => user.gender,
         { onDelete: 'CASCADE' }
     )
-    user: User;
+    userOwner: User;
 
     @Column('decimal', {
         nullable: true,
