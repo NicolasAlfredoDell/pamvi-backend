@@ -9,6 +9,7 @@ import { Pet } from './entities/pet.entity';
 
 // Modules
 import { BreedOfAnimalsModule } from 'src/breed-of-animals/breed-of-animals.module';
+import { ColorsModule } from 'src/colors/colors.module';
 import { GenderOfAnimalsModule } from 'src/gender-of-animals/gender-of-animals.module';
 import { SpeciesOfAnimalsModule } from 'src/species-of-animals/species-of-animals.module';
 import { UsersModule } from 'src/users/users.module';
@@ -25,6 +26,7 @@ import { PetsService } from './pets.service';
   ],
   imports: [
     BreedOfAnimalsModule,
+    ColorsModule,
     GenderOfAnimalsModule,
     TypeOrmModule.forFeature([ Pet ]),
     SpeciesOfAnimalsModule,

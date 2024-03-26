@@ -29,6 +29,7 @@ import { SpeciesOfAnimalsModule } from './species-of-animals/species-of-animals.
 import { TokensValidationModule } from './tokens-validation/tokens-validation.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
 import { UsersModule } from './users/users.module';
+import { ColorsModule } from './colors/colors.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { UsersModule } from './users/users.module';
     TokensValidationModule,
     TypesOfUsersModule,
     UsersModule,
+    ColorsModule,
   ],
   controllers: [],
   providers: [],

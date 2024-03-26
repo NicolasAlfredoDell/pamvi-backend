@@ -15,6 +15,7 @@ import { Pet } from './entities/pet.entity';
 
 // Services
 import { BreedOfAnimalsService } from 'src/breed-of-animals/breed-of-animals.service';
+import { ColorsService } from 'src/colors/colors.service';
 import { GenderOfAnimalsService } from 'src/gender-of-animals/gender-of-animals.service';
 import { SpeciesOfAnimalsService } from '../species-of-animals/species-of-animals.service';
 import { UsersService } from 'src/users/users.service';
@@ -32,6 +33,8 @@ export class PetsService {
 
     private readonly breedOfAnimalsService: BreedOfAnimalsService,
 
+    private readonly colorService: ColorsService,
+
     private readonly genderOfAnimalService: GenderOfAnimalsService,
 
     private readonly speciesOfAnimalsService: SpeciesOfAnimalsService,
@@ -43,7 +46,7 @@ export class PetsService {
     createPetDto: CreatePetDto,
   ) {
     try {
-      const { breed, gender, specie, user, ...petDetails } = createPetDto;
+      const { breed, gender, predominantColor, specie, user, ...petDetails } = createPetDto;
 
       let createPet: any = {
         ...petDetails,
@@ -83,6 +86,15 @@ export class PetsService {
           throw new BadRequestException(`La raza está deshabilitada.`);
 
         createPet.breed = breedOfAnimalDB;
+      }
+
+      if ( predominantColor ) {
+        const colorDB = await this.colorService.findOne(predominantColor);
+
+        if ( colorDB.disabled )
+          throw new BadRequestException(`El color está deshabilitado.`);
+
+        createPet.predominantColor = colorDB;
       }
 
       const pet = this.petsServiceRepository.create(createPet);
@@ -213,7 +225,7 @@ export class PetsService {
     id: string,
     updatePetDto: UpdatePetDto,
   ) {
-    const { breed, gender, specie, user, ...petDeatils } = updatePetDto;
+    const { breed, gender, predominantColor, specie, user, ...petDeatils } = updatePetDto;
 
     let createPet: any = {
       ...petDeatils
@@ -253,6 +265,15 @@ export class PetsService {
         throw new BadRequestException(`La raza está deshabilitada.`);
 
       createPet.breed = breedOfAnimalDB;
+    }
+
+    if ( predominantColor ) {
+      const colorDB = await this.colorService.findOne(predominantColor);
+
+      if ( colorDB.disabled )
+        throw new BadRequestException(`El color está deshabilitado.`);
+
+      createPet.predominantColor = colorDB;
     }
 
     const pet = await this.petsServiceRepository.preload({

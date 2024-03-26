@@ -2,6 +2,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, PrimaryGenerated
 
 // Entities
 import { BreedOfAnimal } from 'src/breed-of-animals/entities/breed-of-animal.entity';
+import { Color } from 'src/colors/entities/color.entity';
 import { GenderOfAnimal } from 'src/gender-of-animals/entities/gender-of-animal.entity';
 import { SpeciesOfAnimals } from 'src/species-of-animals/entities/species-of-animal.entity';
 import { User } from 'src/users/entities';
@@ -38,12 +39,15 @@ export class Pet {
     gender: GenderOfAnimal;
 
     @Column('decimal', {
+        nullable: true,
         precision: 5,
         scale: 2,
     })
     height: number;
 
-    @Column('int')
+    @Column('int', {
+        nullable: true,
+    })
     identificationNumber: number;
 
     @Column('text',{
@@ -51,7 +55,16 @@ export class Pet {
     })
     name: string;
 
-    @Column('int')
+    @ManyToOne(
+        () => Color,
+        (color) => color.pet,
+        { onDelete: 'CASCADE' }
+    )
+    predominantColor: Color;
+
+    @Column('int',{
+        nullable: true,
+    })
     registrationNumber: number;
     
     @ManyToOne(
@@ -72,6 +85,7 @@ export class Pet {
     user: User;
 
     @Column('decimal', {
+        nullable: true,
         precision: 5,
         scale: 2,
     })
