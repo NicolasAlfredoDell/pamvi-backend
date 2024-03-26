@@ -150,7 +150,7 @@ export class TypesOfUsersService {
         .execute();
 
       return {
-        message: 'Se eliminaron todos los tipos correctamente',
+        message: 'Se eliminaron todos los tipos de usuario correctamente',
       }
     } catch (error) { this.handleDBException(error) }
   }

@@ -47,11 +47,9 @@ export class SpeciesOfAnimalsController {
     return this.speciesOfAnimalsService.remove(id);
   }
 
-  @Delete(':id')
+  @Delete()
   // @Auth(ValidRoles.superUser)
-  removeAll(
-    @Param('id', ParseUUIDPipe) id: string,
-  ) {
+  removeAll() {
     return this.speciesOfAnimalsService.removeAll();
   }
 

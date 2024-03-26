@@ -1,9 +1,9 @@
-import { IsAlphanumeric, IsDefined, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsDefined, IsHexColor, IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class CreateColorDto {
 
-    @IsAlphanumeric('ar', { message: 'El valor debe tener letras y/o números' })
     @IsDefined({ message: 'Debe enviar el valor' })
+    @IsHexColor({ message: 'Tiene que ser un valor hexadecimal' })
     @IsNotEmpty({ message: 'El valor no puede estar vacío' })
     hex: string;
 

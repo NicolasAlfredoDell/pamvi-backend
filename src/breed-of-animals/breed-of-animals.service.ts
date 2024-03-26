@@ -141,7 +141,7 @@ export class BreedOfAnimalsService {
   }
 
   async removeAll() {
-    const query = this.breedOfAnimalRepository.createQueryBuilder('breed-of-animals');
+    const query = this.breedOfAnimalRepository.createQueryBuilder('breed-of-animal');
 
     try {
       await query

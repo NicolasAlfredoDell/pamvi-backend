@@ -94,7 +94,7 @@ export class ColorsService {
 
     return {
       totals: await this.colorRepository.count(),
-      gendersOfAnimals: colors,
+      colors: colors,
     }
   }
 

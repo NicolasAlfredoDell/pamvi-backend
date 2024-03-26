@@ -47,7 +47,7 @@ export class BreedOfAnimalsController {
     return this.breedOfAnimalsService.remove(id);
   }
 
-  @Delete(':id')
+  @Delete()
   // @Auth(ValidRoles.superUser)
   removeAll() {
     return this.breedOfAnimalsService.removeAll();
