@@ -1,14 +1,26 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
-import { User } from 'src/users/entities';
+import { BreedOfAnimal } from 'src/breed-of-animals/entities/breed-of-animal.entity';
+import { GenderOfAnimal } from 'src/gender-of-animals/entities/gender-of-animal.entity';
 import { SpeciesOfAnimals } from 'src/species-of-animals/entities/species-of-animal.entity';
+import { User } from 'src/users/entities';
 
 @Entity()
 export class Pet {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column('date')
+    birthday: Date;
+
+    @ManyToOne(
+        () => BreedOfAnimal,
+        (breedOfAnimal) => breedOfAnimal.pet,
+        { onDelete: 'CASCADE', nullable: true }
+    )
+    breed: SpeciesOfAnimals;
 
     @Column('timestamp')
     created_at: Date;
@@ -18,10 +30,29 @@ export class Pet {
     })
     disabled: boolean;
 
+    @ManyToOne(
+        () => GenderOfAnimal,
+        (genderOfAnimal) => genderOfAnimal.pet,
+        { onDelete: 'CASCADE' }
+    )
+    gender: GenderOfAnimal;
+
+    @Column('decimal', {
+        precision: 5,
+        scale: 2,
+    })
+    height: number;
+
+    @Column('int')
+    identificationNumber: number;
+
     @Column('text',{
         unique: true,
     })
     name: string;
+
+    @Column('int')
+    registrationNumber: number;
     
     @ManyToOne(
         () => SpeciesOfAnimals,
@@ -40,6 +71,15 @@ export class Pet {
     )
     user: User;
 
+    @Column('decimal', {
+        precision: 5,
+        scale: 2,
+    })
+    weight: number;
+
+    @Column('int')
+    years: number;
+
     @BeforeInsert()
     setCreatedAtAndUpdateAtInsert() {
         this.created_at = new Date();
@@ -49,6 +89,11 @@ export class Pet {
     @BeforeInsert()
     setFullNameAndSlugInsert() {
         this.setName();
+    }
+
+    @BeforeInsert()
+    setYearsInsert() {
+        this.setYears();
     }
 
     @BeforeUpdate()
@@ -61,8 +106,30 @@ export class Pet {
         this.setName();
     }
 
+    @BeforeUpdate()
+    setYearsUpdate() {
+        this.setYears();
+    }
+
     setName(): void {
         this.name = this.name.trim();
+    }
+
+    setYears(): void {
+        const today: Date = new Date();
+        const birthdate: Date = new Date(this.birthday);
+        
+        let years: number = today.getFullYear() - birthdate.getFullYear();
+
+        const actuallyMonth = today.getMonth();
+        var previousMonth = birthdate.getMonth();
+
+        if (
+            previousMonth > actuallyMonth ||
+            ( previousMonth === actuallyMonth && today.getDate() > today.getDate() )
+        ) years--;
+        
+        this.years = years;
     }
 
 }

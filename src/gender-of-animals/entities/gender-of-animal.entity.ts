@@ -1,10 +1,10 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 // Entities
-import { User } from 'src/users/entities';
+import { Pet } from 'src/pets/entities/pet.entity';
 
 @Entity()
-export class GenderOfUser {
+export class GenderOfAnimal {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -22,15 +22,15 @@ export class GenderOfUser {
     })
     name: string;
 
-    @Column('timestamp')
-    updated_at: Date;
-
     @OneToMany(
-        () => User,
-        (user) => user.gender,
+        () => Pet,
+        (pet) => pet.gender,
         { cascade: true }
     )
-    user: User;
+    pet: Pet;
+
+    @Column('timestamp')
+    updated_at: Date;
 
     @BeforeInsert()
     setCreatedAtAndUpdateAtInsert() {

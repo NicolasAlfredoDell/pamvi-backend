@@ -5,35 +5,35 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { InjectRepository } from '@nestjs/typeorm';
 
 // DTOs
-import { CreateGenderOfUserDto, UpdateGenderOfUserDto } from './dto';
+import { CreateGenderOfAnimalDto, UpdateGenderOfAnimalDto } from './dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Entites
-import { GenderOfUser } from './entities/gender-of-user.entity';
+import { GenderOfAnimal } from './entities/gender-of-animal.entity';
 
 @Injectable()
-export class GenderOfUsersService {
-
-  private readonly logger = new Logger('GenderOfUsersService');
+export class GenderOfAnimalsService {
+  
+  private readonly logger = new Logger('GenderOfAnimalsService');
 
   constructor(
-    @InjectRepository(GenderOfUser)
-    private readonly genderOfUserRepository: Repository<GenderOfUser>,
+    @InjectRepository(GenderOfAnimal)
+    private readonly genderOfAnimalRepository: Repository<GenderOfAnimal>,
 
     private readonly dataSource: DataSource,
   ) {}
 
   async create(
-    createGenderOfUserDto: CreateGenderOfUserDto,
+    createGenderOfAnimalDto: CreateGenderOfAnimalDto,
   ) {
     try {
-      const { ...genderOfUsersDetails } = createGenderOfUserDto;
+      const { ...genderOfAnimalsDetails } = createGenderOfAnimalDto;
 
-      const genderOfUser = this.genderOfUserRepository.create({
-        ...genderOfUsersDetails,
+      const genderOfAnimal = this.genderOfAnimalRepository.create({
+        ...genderOfAnimalsDetails,
       });
       
-      const gender = await this.genderOfUserRepository.save( genderOfUser );
+      const gender = await this.genderOfAnimalRepository.save( genderOfAnimal );
 
       return {
         data: [gender],
@@ -45,16 +45,16 @@ export class GenderOfUsersService {
   async disabled(
     id: string,
   ) {
-    const genderOfUser = await this.genderOfUserRepository.preload({
+    const genderOfAnimal = await this.genderOfAnimalRepository.preload({
       id: id,
       disabled: true,
     });
 
-    if ( !genderOfUser )
+    if ( !genderOfAnimal )
       throw new NotFoundException(`El genero no existe.`);
 
     try {
-      await this.genderOfUserRepository.save( genderOfUser );
+      await this.genderOfAnimalRepository.save( genderOfAnimal );
 
       return {
         message: 'Se deshabilito el género.',
@@ -65,16 +65,16 @@ export class GenderOfUsersService {
   async enabled(
     id: string,
   ) {
-    const genderOfUser = await this.genderOfUserRepository.preload({
+    const genderOfAnimal = await this.genderOfAnimalRepository.preload({
       id: id,
       disabled: false,
     });
 
-    if ( !genderOfUser )
+    if ( !genderOfAnimal )
       throw new NotFoundException(`El género no existe.`);
 
     try {
-      await this.genderOfUserRepository.save( genderOfUser );
+      await this.genderOfAnimalRepository.save( genderOfAnimal );
 
       return {
         message: 'Se habilitó el género.',
@@ -87,33 +87,33 @@ export class GenderOfUsersService {
   ) {
     const { limit = 10, offset = 0 } = paginationDto;
 
-    const gendersOfUsers = await this.genderOfUserRepository.find({
+    const gendersOfAnimals = await this.genderOfAnimalRepository.find({
       take: limit,
       skip: offset,
     });
 
     return {
-      totals: await this.genderOfUserRepository.count(),
-      gendersOfUsers: gendersOfUsers,
+      totals: await this.genderOfAnimalRepository.count(),
+      gendersOfAnimals: gendersOfAnimals,
     }
   }
 
   async findOne(
     term: string,
   ) {
-    let genderOfUsers: GenderOfUser;
+    let genderOfAnimals: GenderOfAnimal;
 
     isUUID(term)
-      ? genderOfUsers = await this.genderOfUserRepository.findOneBy({ id: term })
-      : genderOfUsers = await this.genderOfUserRepository
-                        .createQueryBuilder('genderofusers')
-                        .where('genderofusers.name = :term', { term })
+      ? genderOfAnimals = await this.genderOfAnimalRepository.findOneBy({ id: term })
+      : genderOfAnimals = await this.genderOfAnimalRepository
+                        .createQueryBuilder('genderofanimal')
+                        .where('genderofanimal.name = :term', { term })
                         .getOne();
 
-    if ( !genderOfUsers )
+    if ( !genderOfAnimals )
       throw new NotFoundException(`No existe el género.`);
 
-    return genderOfUsers;
+    return genderOfAnimals;
   }
 
   async findOnePlain(
@@ -129,10 +129,10 @@ export class GenderOfUsersService {
   async remove(
     id: string,
   ) {
-    const genderOfUsers = await this.findOne(id);
+    const genderOfAnimals = await this.findOne(id);
 
     try {
-      await this.genderOfUserRepository.remove( genderOfUsers );
+      await this.genderOfAnimalRepository.remove( genderOfAnimals );
   
       return {
         message: `Género eliminado.`,
@@ -141,7 +141,7 @@ export class GenderOfUsersService {
   }
 
   async removeAll() {
-    const query = this.genderOfUserRepository.createQueryBuilder('gender-of-users');
+    const query = this.genderOfAnimalRepository.createQueryBuilder('gender-of-animals');
 
     try {
       await query
@@ -157,16 +157,16 @@ export class GenderOfUsersService {
 
   async update(
     id: string,
-    updateGenderOfUserDto: UpdateGenderOfUserDto,
+    updateGenderOfAnimalDto: UpdateGenderOfAnimalDto,
   ) {
-    const { ...genderOfUsersDeatils } = updateGenderOfUserDto;
+    const { ...genderOfAnimalsDeatils } = updateGenderOfAnimalDto;
 
-    const genderOfUsers = await this.genderOfUserRepository.preload({
+    const genderOfAnimals = await this.genderOfAnimalRepository.preload({
       id,
-      ...genderOfUsersDeatils,
+      ...genderOfAnimalsDeatils,
     });
 
-    if ( !genderOfUsers )
+    if ( !genderOfAnimals )
       throw new NotFoundException(`El género no existe.`);
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -174,11 +174,11 @@ export class GenderOfUsersService {
     await queryRunner.startTransaction();
 
     try {
-      await queryRunner.manager.save(genderOfUsers);
+      await queryRunner.manager.save(genderOfAnimals);
       await queryRunner.commitTransaction();
       await queryRunner.release();
 
-      await this.genderOfUserRepository.save( genderOfUsers );
+      await this.genderOfAnimalRepository.save( genderOfAnimals );
 
       return {
         message: `Género modificado correctamente.`,

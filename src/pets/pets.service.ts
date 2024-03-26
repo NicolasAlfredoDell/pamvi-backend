@@ -14,8 +14,10 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Pet } from './entities/pet.entity';
 
 // Services
-import { UsersService } from 'src/users/users.service';
+import { BreedOfAnimalsService } from 'src/breed-of-animals/breed-of-animals.service';
+import { GenderOfAnimalsService } from 'src/gender-of-animals/gender-of-animals.service';
 import { SpeciesOfAnimalsService } from '../species-of-animals/species-of-animals.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PetsService {
@@ -28,6 +30,10 @@ export class PetsService {
 
     private readonly dataSource: DataSource,
 
+    private readonly breedOfAnimalsService: BreedOfAnimalsService,
+
+    private readonly genderOfAnimalService: GenderOfAnimalsService,
+
     private readonly speciesOfAnimalsService: SpeciesOfAnimalsService,
 
     private readonly userService: UsersService,
@@ -37,23 +43,49 @@ export class PetsService {
     createPetDto: CreatePetDto,
   ) {
     try {
-      const { specie, user, ...petDetails } = createPetDto;
+      const { breed, gender, specie, user, ...petDetails } = createPetDto;
 
-      const userDB = await this.userService.findOne(user);
-
-      if ( userDB.disabled )
-        throw new BadRequestException(`El usuario está deshabilitado.`);
-
-      const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(user);
-
-      if ( specieOfAnimalsDB.disabled )
-        throw new BadRequestException(`La especie de animal está deshabilitado.`);
-
-      const pet = this.petsServiceRepository.create({
+      let createPet: any = {
         ...petDetails,
-        specie: specieOfAnimalsDB,
-        user: userDB,
-      });
+      };
+
+      if ( user ) {
+        const userDB = await this.userService.findOne(user);
+
+        if ( userDB.disabled )
+          throw new BadRequestException(`El usuario está deshabilitado.`);
+
+        createPet.user = userDB;
+      }
+
+      if ( specie ) {
+        const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(user);
+
+        if ( specieOfAnimalsDB.disabled )
+          throw new BadRequestException(`La especie de animal está deshabilitado.`);
+
+        createPet.specie = specieOfAnimalsDB;
+      }
+
+      if ( gender ) {
+        const genderOfAnimalDB = await this.genderOfAnimalService.findOne(gender);
+
+        if ( genderOfAnimalDB.disabled )
+          throw new BadRequestException(`El género está deshabilitado.`);
+
+        createPet.gender = genderOfAnimalDB;
+      }
+
+      if ( breed ) {
+        const breedOfAnimalDB = await this.breedOfAnimalsService.findOne(breed);
+
+        if ( breedOfAnimalDB.disabled )
+          throw new BadRequestException(`La raza está deshabilitada.`);
+
+        createPet.breed = breedOfAnimalDB;
+      }
+
+      const pet = this.petsServiceRepository.create(createPet);
       
       const petDB = await this.petsServiceRepository.save( pet );
 
@@ -181,23 +213,51 @@ export class PetsService {
     id: string,
     updatePetDto: UpdatePetDto,
   ) {
-    const { specie, user, ...petDeatils } = updatePetDto;
+    const { breed, gender, specie, user, ...petDeatils } = updatePetDto;
 
-    const userDB = await this.userService.findOne(user);
+    let createPet: any = {
+      ...petDeatils
+    };
 
-    if ( userDB.disabled )
-      throw new BadRequestException(`El usuario está deshabilitado.`);
+    if ( user ) {
+      const userDB = await this.userService.findOne(user);
 
-    const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(user);
+      if ( userDB.disabled )
+        throw new BadRequestException(`El usuario está deshabilitado.`);
 
-    if ( specieOfAnimalsDB.disabled )
-      throw new BadRequestException(`La especie de animal está deshabilitado.`);
+      createPet.user = userDB;
+    }
+
+    if ( specie ) {
+      const specieOfAnimalsDB = await this.speciesOfAnimalsService.findOne(user);
+
+      if ( specieOfAnimalsDB.disabled )
+        throw new BadRequestException(`La especie de animal está deshabilitado.`);
+
+      createPet.specie = specieOfAnimalsDB;
+    }
+
+    if ( gender ) {
+      const genderOfAnimalDB = await this.genderOfAnimalService.findOne(gender);
+
+      if ( genderOfAnimalDB.disabled )
+        throw new BadRequestException(`El género está deshabilitado.`);
+
+      createPet.gender = genderOfAnimalDB;
+    }
+
+    if ( breed ) {
+      const breedOfAnimalDB = await this.breedOfAnimalsService.findOne(breed);
+
+      if ( breedOfAnimalDB.disabled )
+        throw new BadRequestException(`La raza está deshabilitada.`);
+
+      createPet.breed = breedOfAnimalDB;
+    }
 
     const pet = await this.petsServiceRepository.preload({
       id,
-      specie: specieOfAnimalsDB,
-      user: userDB,
-      ...petDeatils,
+      ...createPet,
     });
 
     if ( !pet )

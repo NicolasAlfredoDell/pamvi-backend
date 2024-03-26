@@ -2,12 +2,14 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, Prima
 
 // Entities
 import { GenderOfUser } from 'src/gender-of-users/entities/gender-of-user.entity';
+import { Pet } from "src/pets/entities/pet.entity";
 import { TypesOfUser } from 'src/types-of-users/entities/types-of-user.entity';
 import { UserImage } from "./user-image.entity";
-import { Pet } from "src/pets/entities/pet.entity";
 
 @Entity()
 export class User {
+
+    // FALTA LOCACION
 
     @OneToMany(
         () => UserImage,
@@ -88,10 +90,6 @@ export class User {
 
     @Column('int')
     years: number;
-
-    // FALTA TIPO DE USUARIO
-    // FALTA LOCACION
-    // FALTA MASCOTAS
 
     @BeforeInsert()
     setFullNameAndSlugInsert() {

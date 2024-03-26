@@ -21,7 +21,7 @@ export class UsersController {
   
   constructor(
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   @Get()
   @UsePipes(ValidationPipe)

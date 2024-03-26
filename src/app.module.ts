@@ -16,8 +16,10 @@ import { JoiValidationSchema } from './config/joi.validation';
 // Modules
 import { AdversitingModule } from './adversiting/adversiting.module';
 import { AuthModule } from './auth/auth.module';
+import { BreedOfAnimalsModule } from './breed-of-animals/breed-of-animals.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
+import { GenderOfAnimalsModule } from './gender-of-animals/gender-of-animals.module';
 import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
 import { MailsModule } from './mails/mails.module';
 import { PetsModule } from './pets/pets.module';
@@ -79,8 +81,10 @@ import { UsersModule } from './users/users.module';
 
     AdversitingModule,
     AuthModule,
+    BreedOfAnimalsModule,
     CommonModule,
     FilesModule,
+    GenderOfAnimalsModule,
     GenderOfUsersModule,
     MailsModule,
     PetsModule,

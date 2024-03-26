@@ -4,6 +4,8 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsDefined, IsEmail, IsNotE
 
 export class CreateUserDto {
 
+     // FALTA LOCACION
+
     @IsDefined({ message: 'La fecha de nacimiento debe estar definida' })
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })
     @IsNotEmpty({ message: 'La fecha de nacimiento no puede estar vacía' })
@@ -79,9 +81,5 @@ export class CreateUserDto {
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })
     twitter?: string;
-
-    // FALTA GENERO
-    // FALTA TIPO DE USUARIO
-    // FALTA LOCACION
 
 }
