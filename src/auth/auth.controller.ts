@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -45,6 +45,14 @@ export class AuthController {
         @Body() createUserDto: CreateUserDto,
     ) {
         return this.authService.register(createUserDto);
+    }
+
+    @Post('send-mail-register')
+    @UsePipes(ValidationPipe)
+    sendMailRegister(
+        @Body() mail: string,
+    ) {
+        return this.authService.sendMailRegister(mail);
     }
 
     @Post('send-mail-recovery-password')

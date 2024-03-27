@@ -155,18 +155,29 @@ export class AuthService {
 
             await this.authRepository.save( user );
 
+            this.sendMailRegister( user );
+
+            return {
+                message: `Usuario registrado correctamente. Le hemos enviado un correo a ${user.email} para activar su cuenta.`,
+            };
+        } catch (error) { this.handleDBException(error) }
+    }
+
+    async sendMailRegister(
+        user: any,
+    ) {
+        if ( !user.id )
+            user = this.usersService.findOne( user );
+
+        try {
             const createMailDto: CreateMailDto = {
                 context: { token: this.getJWT({ id: user.id, email: user.email, }) },
                 subject: 'Activación de cuenta en PAMVI',
                 template: 'register',
                 to: [user.email],
             };
-
+    
             await this.mailsService.sendMail(createMailDto);
-
-            return {
-                message: `Usuario registrado correctamente. Le hemos enviado un correo a ${user.email} para activar su cuenta.`,
-            };
         } catch (error) { this.handleDBException(error) }
     }
 
