@@ -53,6 +53,10 @@ export class CreateUserDto {
     @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚüÜ ]+$/, { message: 'El o los apellidos deben tener solo letras' })
     lastnames: string;
 
+    @IsOptional()
+    @IsUrl({}, { message: 'Ingrese una url válida' })
+    mercadopago?: string;
+
     @IsDefined({ message: 'El o los nombres deben estar definidos' })
     @IsNotEmpty({ message: 'El o los nombres no pueden estar vacíos' })
     @IsString({ message: 'El o los nombres deben tener letras' })

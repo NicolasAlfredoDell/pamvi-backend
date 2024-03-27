@@ -1,10 +1,11 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
 import { GenderOfUser } from 'src/gender-of-users/entities/gender-of-user.entity';
 import { Pet } from "src/pets/entities/pet.entity";
 import { TypesOfUser } from 'src/types-of-users/entities/types-of-user.entity';
 import { UserImage } from "./user-image.entity";
+import { Report } from 'src/reports/entities/report.entity';
 
 @Entity()
 export class User {
@@ -62,6 +63,11 @@ export class User {
     @Column('text')
     lastnames: string;
 
+    @Column('text', {
+        nullable: true,
+    })
+    mercadopago: string;
+
     @Column('text')
     names: string;
 
@@ -86,6 +92,13 @@ export class User {
         { onDelete: 'CASCADE', nullable: true }
     )
     petForAdopt: User;
+
+    @OneToMany(
+        () => Report,
+        (report) => report.user,
+        { cascade: true }
+    )
+    report: Report;
 
     @Column('text', {
         nullable: true,

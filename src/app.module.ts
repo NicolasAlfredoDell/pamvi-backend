@@ -24,6 +24,7 @@ import { GenderOfAnimalsModule } from './gender-of-animals/gender-of-animals.mod
 import { GenderOfUsersModule } from './gender-of-users/gender-of-users.module';
 import { MailsModule } from './mails/mails.module';
 import { PetsModule } from './pets/pets.module';
+import { ReportsModule } from './reports/reports.module';
 import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { SeedModule } from './seed/seed.module';
 import { SpeciesOfAnimalsModule } from './species-of-animals/species-of-animals.module';
@@ -90,6 +91,7 @@ import { UsersModule } from './users/users.module';
     GenderOfUsersModule,
     MailsModule,
     PetsModule,
+    ReportsModule,
     ScheduleTasksModule,
     SeedModule,
     SpeciesOfAnimalsModule,

@@ -44,6 +44,10 @@ export class UpdateUserDto {
     @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/, { message: 'El o los nombres deben tener solo letras' })
     names?: string;
 
+    @IsOptional()
+    @IsUrl({}, { message: 'Ingrese una url válida' })
+    mercadopago?: string;
+
     @IsDefined({ message: 'El tipo de usuario debe estar definido' })
     @IsUUID('4', { message: 'El tipo de usuario debe ser un UUID' })
     @IsNotEmpty({ message: 'El tipo de usuario no puede estar vacío' })
