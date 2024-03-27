@@ -167,7 +167,7 @@ export class AuthService {
         user: any,
     ) {
         if ( !user.id )
-            user = this.usersService.findOne( user );
+            user = await this.usersService.findOne( user.email );
 
         try {
             const createMailDto: CreateMailDto = {
@@ -178,6 +178,10 @@ export class AuthService {
             };
     
             await this.mailsService.sendMail(createMailDto);
+
+            return {
+                message: `Le hemos enviado un correo a ${user.email} para activar su cuenta.`,
+            }
         } catch (error) { this.handleDBException(error) }
     }
 

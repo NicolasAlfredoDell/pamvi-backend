@@ -2,7 +2,7 @@ import { Body, Controller, Param, Patch, Post, Req, UsePipes, ValidationPipe } f
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { LoginUserDto, SendMailRecoveryPasswordDto } from './dto';
+import { LoginUserDto, SendMailRecoveryPasswordDto, SendMailRegisterDto } from './dto';
 
 // Services
 import { AuthService } from './auth.service';
@@ -50,9 +50,9 @@ export class AuthController {
     @Post('send-mail-register')
     @UsePipes(ValidationPipe)
     sendMailRegister(
-        @Body() mail: string,
+        @Body() sendMailRegisterDto: SendMailRegisterDto,
     ) {
-        return this.authService.sendMailRegister(mail);
+        return this.authService.sendMailRegister(sendMailRegisterDto);
     }
 
     @Post('send-mail-recovery-password')
