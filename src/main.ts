@@ -8,6 +8,11 @@ async function main() {
 
   app.setGlobalPrefix('api');
 
+  app.enableCors({
+    origin: [`${process.env.CORS_ORIGIN}`],
+    methods: ['DELETE', 'GET', 'PATCH', 'POST', 'PUT'],
+  })
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
