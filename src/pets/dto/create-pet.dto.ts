@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 
-import { IsDate, IsDefined, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Matches, MaxDate, MinDate } from 'class-validator';
+import { IsDate, IsDefined, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Matches, MinDate } from 'class-validator';
 
 export class CreatePetDto {
 
@@ -10,11 +10,6 @@ export class CreatePetDto {
     @MinDate(new Date('1950-01-01'), { message: 'La fecha debe ser igual o posterior al año 1950' })
     @Type( () => Date )
     birthday: Date;
-
-    @IsDefined({ message: 'La raza debe estar definida' })
-    @IsUUID('4', { message: 'La raza debe ser un UUID' })
-    @IsNotEmpty({ message: 'La raza no puede estar vacía' })
-    breed?: string;
 
     @IsNumber({}, { message: 'La altura debe ser en número' })
     @IsOptional()

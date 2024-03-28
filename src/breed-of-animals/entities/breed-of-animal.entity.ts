@@ -1,7 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entites
-import { Pet } from 'src/pets/entities/pet.entity';
+import { SpeciesOfAnimals } from 'src/species-of-animals/entities/species-of-animal.entity';
 
 @Entity()
 export class BreedOfAnimal {
@@ -23,11 +23,11 @@ export class BreedOfAnimal {
     name: string;
 
     @OneToMany(
-        () => Pet,
-        (pet) => pet.breed,
+        () => SpeciesOfAnimals,
+        (speciesOfAnimals) => speciesOfAnimals.breed,
         { cascade: true }
     )
-    pet: Pet;
+    specie: SpeciesOfAnimals;
 
     @Column('timestamp')
     updated_at: Date;

@@ -10,6 +10,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Entites
 import { BreedOfAnimal } from './entities/breed-of-animal.entity';
+import { SpeciesOfAnimalsService } from '../species-of-animals/species-of-animals.service';
 
 @Injectable()
 export class BreedOfAnimalsService {
@@ -21,16 +22,24 @@ export class BreedOfAnimalsService {
     private readonly breedOfAnimalRepository: Repository<BreedOfAnimal>,
 
     private readonly dataSource: DataSource,
+
+    private readonly speciesOfAnimalsService: SpeciesOfAnimalsService,
   ) {}
 
   async create(
     createBreedOfAnimalDto: CreateBreedOfAnimalDto,
   ) {
     try {
-      const { ...breedOfAnimalDetails } = createBreedOfAnimalDto;
+      const { specie, ...breedOfAnimalDetails } = createBreedOfAnimalDto;
+
+      const specieDB = await this.speciesOfAnimalsService.findOne( specie );
+
+      if ( specieDB.disabled )
+        throw new BadRequestException(`la especie está deshabilitada.`);
 
       const breedOfAnimal = this.breedOfAnimalRepository.create({
         ...breedOfAnimalDetails,
+        specie: specieDB,
       });
       
       const breed = await this.breedOfAnimalRepository.save( breedOfAnimal );
@@ -159,7 +168,20 @@ export class BreedOfAnimalsService {
     id: string,
     updateBreedOfAnimalDto: UpdateBreedOfAnimalDto,
   ) {
-    const { ...breedOfAnimalDeatils } = updateBreedOfAnimalDto;
+    const { specie, ...breedOfAnimalDeatils } = updateBreedOfAnimalDto;
+
+    let createBreedOfAnimal: any = {
+      ...breedOfAnimalDeatils,
+    };
+
+    if ( specie ) {
+      const specieDB = await this.speciesOfAnimalsService.findOne(specie);
+
+      if ( specieDB.disabled )
+        throw new BadRequestException(`La especie está deshabilitada.`);
+
+        createBreedOfAnimal.user = specieDB;
+    }
 
     const breedOfAnimal = await this.breedOfAnimalRepository.preload({
       id,

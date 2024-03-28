@@ -52,8 +52,8 @@ export class SeedService {
   }
 
   private async insertTables(): Promise<void> {
-    await this.insertTable('breedOfAnimals');
-    await this.insertTable('typesOfUsers');
+    // await this.insertTable('breedOfAnimals');
+    // await this.insertTable('typesOfUsers');
     // await this.insertTable('speciesOfAnimals');
     // await this.insertTable('reports');
     // await this.insertTable('genderOfUsers');

@@ -7,6 +7,9 @@ import { BreedOfAnimalsController } from './breed-of-animals.controller';
 // Entities
 import { BreedOfAnimal } from './entities/breed-of-animal.entity';
 
+// Modules
+import { SpeciesOfAnimalsModule } from 'src/species-of-animals/species-of-animals.module';
+
 // Services
 import { BreedOfAnimalsService } from './breed-of-animals.service';
 
@@ -18,6 +21,7 @@ import { BreedOfAnimalsService } from './breed-of-animals.service';
     BreedOfAnimalsService,
   ],
   imports: [
+    SpeciesOfAnimalsModule,
     TypeOrmModule.forFeature([ BreedOfAnimal ]),
   ],
   exports: [

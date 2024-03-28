@@ -1,10 +1,18 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entites
+import { BreedOfAnimal } from 'src/breed-of-animals/entities/breed-of-animal.entity';
 import { Pet } from 'src/pets/entities/pet.entity';
 
 @Entity()
 export class SpeciesOfAnimals {
+
+    @ManyToOne(
+        () => BreedOfAnimal,
+        (breedOfAnimal) => breedOfAnimal.specie,
+        { onDelete: 'CASCADE', nullable: true }
+    )
+    breed: BreedOfAnimal;
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
