@@ -1,9 +1,117 @@
-import { v4 as uuid } from 'uuid';
-
 // Interfaces
 import { SeedData } from '../interfaces/seed-data.interface';
 
 export const initialData: SeedData = {
+    breedOfAnimals: [
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Canario',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Cobaya',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Conejo',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Erizo',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Gato',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Hamster',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Hurón',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Lagarto',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Loro',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Paloma',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Perico',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Pez',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Perro',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Rana',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Rata',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Salamandra',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Serpiente',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
+            name: 'Tortuga',
+            updated_at: null,
+        },
+    ],
     gendersOfUsers: [
         {
             created_at: new Date(),
@@ -21,26 +129,43 @@ export const initialData: SeedData = {
     typesOfUsers: [
         {
             created_at: new Date(),
-            disabled: false,
-            name: 'Usuario',
-            updated_at: null,
-        },
-        {
-            created_at: new Date(),
+            description: 'Tienes ganas de ayudar administrando la aplicación.',
             disabled: false,
             name: 'Administrador',
             updated_at: null,
         },
         {
             created_at: new Date(),
+            description: 'Eres dueño/a de una protectora de animales.',
+            disabled: false,
+            name: 'Protectora de animales',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            description: 'Eres el dueño de la aplicación.',
             disabled: false,
             name: 'Super administrador',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            description: 'Tienes mascotas, quieres registrarlas para llevar un control y/o quieres poner mascotas en adopción.',
+            disabled: false,
+            name: 'Usuario',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            description: 'Eres dueño/a de una veterinaria.',
+            disabled: false,
+            name: 'Veterinario',
             updated_at: null,
         },
     ],
     users: [
         {
-            birthday: new Date('1992-04-1992'),
+            birthday: new Date('27-04-1992'),
             created_at: new Date(),
             disabled: false,
             dni: '36302765',

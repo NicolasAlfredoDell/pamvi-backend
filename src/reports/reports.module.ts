@@ -23,6 +23,9 @@ import { ReportsService } from './reports.service';
   imports: [
     TypeOrmModule.forFeature([ Report ]),
     UsersModule,
+  ],
+  exports: [
+    ReportsService,
   ]
 })
 export class ReportsModule {}

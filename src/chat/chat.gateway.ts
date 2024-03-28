@@ -1,11 +1,22 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { Socket } from 'socket.io';
 
-@WebSocketGateway()
-export class ChatGateway {
-  constructor(private readonly chatService: ChatService) {}
+@WebSocketGateway({ cors: true, namespace: '/chat' })
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  
+  constructor(
+    private readonly chatService: ChatService,
+  ) { }
+
+  handleDisconnect(client: Socket) {
+    console.log('Cliente desconectado');
+  }
+  handleConnection(client: Socket) {
+    console.log('Cliente conectado');
+  }
 
   @SubscribeMessage('createChat')
   create(@MessageBody() createChatDto: CreateChatDto) {

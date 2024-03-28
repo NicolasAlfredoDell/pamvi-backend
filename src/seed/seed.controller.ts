@@ -14,10 +14,10 @@ export class SeedController {
 
   constructor(
     private readonly seedService: SeedService,
-  ) {}
+  ) { }
 
   @Get()
-  @Auth( ValidRoles.superUser, )
+  // @Auth( ValidRoles.superUser, )
   run() {
     return this.seedService.populateDB();
   }

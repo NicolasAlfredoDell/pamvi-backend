@@ -31,6 +31,9 @@ import { PetsService } from './pets.service';
     TypeOrmModule.forFeature([ Pet ]),
     SpeciesOfAnimalsModule,
     UsersModule,
+  ],
+  exports: [
+    PetsService,
   ]
 })
 export class PetsModule {}

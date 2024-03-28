@@ -1,10 +1,12 @@
 // Interfaces
-import { SeedGendersOfUsers, SeedTypesOfUsers, SeedUser } from "./";
+import { SeedBreedOfAnimal, SeedGendersOfUsers, SeedTypesOfUsers, SeedUser } from './';
 
 export interface SeedData {
     
-    gendersOfUsers: SeedGendersOfUsers[],
+    breedOfAnimals: SeedBreedOfAnimal[],
     typesOfUsers: SeedTypesOfUsers[],
+
+    gendersOfUsers: SeedGendersOfUsers[],
     users: SeedUser[],
 
 }

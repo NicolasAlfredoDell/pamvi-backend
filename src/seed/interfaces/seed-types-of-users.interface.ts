@@ -1,9 +1,10 @@
-type ValidNames = 'Usuario'|'Administrador'|'Super administrador';
+type ValidNames = 'Administrador'|'Protectora de animales'|'Super administrador'|'Veterinario'|'Usuario';
 
 export interface SeedTypesOfUsers {
 
-    disabled:     boolean;
     created_at:   Date;
+    description:  string;
+    disabled:     boolean;
     name:         ValidNames;
     updated_at?:  Date;
 

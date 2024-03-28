@@ -15,6 +15,7 @@ import { JoiValidationSchema } from './config/joi.validation';
 
 // Modules
 import { AdversitingModule } from './adversiting/adversiting.module';
+import { AnimalShelterModule } from './animal-shelter/animal-shelter.module';
 import { AuthModule } from './auth/auth.module';
 import { BreedOfAnimalsModule } from './breed-of-animals/breed-of-animals.module';
 import { ChatModule } from './chat/chat.module';
@@ -32,6 +33,7 @@ import { SpeciesOfAnimalsModule } from './species-of-animals/species-of-animals.
 import { TokensValidationModule } from './tokens-validation/tokens-validation.module';
 import { TypesOfUsersModule } from './types-of-users/types-of-users.module';
 import { UsersModule } from './users/users.module';
+import { VetClinicModule } from './vet-clinic/vet-clinic.module';
 
 @Module({
   imports: [
@@ -83,6 +85,7 @@ import { UsersModule } from './users/users.module';
     }),
 
     AdversitingModule,
+    AnimalShelterModule,
     AuthModule,
     BreedOfAnimalsModule,
     ChatModule,
@@ -100,6 +103,7 @@ import { UsersModule } from './users/users.module';
     TokensValidationModule,
     TypesOfUsersModule,
     UsersModule,
+    VetClinicModule,
   ],
   controllers: [],
   providers: [],
