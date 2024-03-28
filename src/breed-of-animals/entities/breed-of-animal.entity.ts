@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entites
 import { Pet } from 'src/pets/entities/pet.entity';
@@ -18,7 +18,7 @@ export class BreedOfAnimal {
     })
     disabled: boolean;
 
-    @Column('text',{
+    @Column('text', {
         unique: true,
     })
     name: string;
@@ -30,7 +30,7 @@ export class BreedOfAnimal {
     )
     pet: Pet;
 
-    @OneToMany(
+    @ManyToOne(
         () => SpeciesOfAnimals,
         (speciesOfAnimals) => speciesOfAnimals.breed,
         { cascade: true }

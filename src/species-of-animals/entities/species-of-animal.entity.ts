@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entites
 import { BreedOfAnimal } from 'src/breed-of-animals/entities/breed-of-animal.entity';
@@ -7,10 +7,10 @@ import { Pet } from 'src/pets/entities/pet.entity';
 @Entity()
 export class SpeciesOfAnimals {
 
-    @ManyToOne(
+    @OneToMany(
         () => BreedOfAnimal,
         (breedOfAnimal) => breedOfAnimal.specie,
-        { onDelete: 'CASCADE', nullable: true }
+        { onDelete: 'CASCADE' }
     )
     breed: BreedOfAnimal;
 
