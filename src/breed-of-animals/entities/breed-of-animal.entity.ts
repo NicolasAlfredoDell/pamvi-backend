@@ -1,6 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entites
+import { Pet } from 'src/pets/entities/pet.entity';
 import { SpeciesOfAnimals } from 'src/species-of-animals/entities/species-of-animal.entity';
 
 @Entity()
@@ -21,6 +22,13 @@ export class BreedOfAnimal {
         unique: true,
     })
     name: string;
+
+    @OneToMany(
+        () => Pet,
+        (pet) => pet.breed,
+        { cascade: true }
+    )
+    pet: Pet;
 
     @OneToMany(
         () => SpeciesOfAnimals,

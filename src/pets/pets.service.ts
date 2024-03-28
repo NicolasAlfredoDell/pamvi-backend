@@ -14,6 +14,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Pet } from './entities/pet.entity';
 
 // Services
+import { BreedOfAnimalsService } from 'src/breed-of-animals/breed-of-animals.service';
 import { ColorsService } from 'src/colors/colors.service';
 import { GenderOfAnimalsService } from 'src/gender-of-animals/gender-of-animals.service';
 import { SpeciesOfAnimalsService } from '../species-of-animals/species-of-animals.service';
@@ -27,6 +28,8 @@ export class PetsService {
   constructor(
     @InjectRepository(Pet)
     private readonly petsServiceRepository: Repository<Pet>,
+
+    private readonly breedOfAnimalsService: BreedOfAnimalsService,
 
     private readonly dataSource: DataSource,
 
@@ -43,7 +46,7 @@ export class PetsService {
     createPetDto: CreatePetDto,
   ) {
     try {
-      const { gender, predominantColor, specie, userOwner, ...petDetails } = createPetDto;
+      const { breed, gender, predominantColor, specie, userOwner, ...petDetails } = createPetDto;
 
       let createPet: any = {
         ...petDetails,
@@ -65,6 +68,15 @@ export class PetsService {
           throw new BadRequestException(`La especie de animal está deshabilitado.`);
 
         createPet.specie = specieOfAnimalsDB;
+      }
+
+      if ( breed ) {
+        const breedOfAnimalDB = await this.breedOfAnimalsService.findOne(breed);
+
+        if ( breedOfAnimalDB.disabled )
+          throw new BadRequestException(`La raza está deshabilitada.`);
+
+        createPet.breed = breedOfAnimalDB;
       }
 
       if ( gender ) {
@@ -213,7 +225,7 @@ export class PetsService {
     id: string,
     updatePetDto: UpdatePetDto,
   ) {
-    const { gender, predominantColor, specie, userOwner, ...petDeatils } = updatePetDto;
+    const { breed, gender, predominantColor, specie, userOwner, ...petDeatils } = updatePetDto;
 
     let createPet: any = {
       ...petDeatils
@@ -244,6 +256,15 @@ export class PetsService {
         throw new BadRequestException(`El género está deshabilitado.`);
 
       createPet.gender = genderOfAnimalDB;
+    }
+
+    if ( breed ) {
+      const breedOfAnimalDB = await this.breedOfAnimalsService.findOne(breed);
+
+      if ( breedOfAnimalDB.disabled )
+        throw new BadRequestException(`La raza está deshabilitada.`);
+
+      createPet.breed = breedOfAnimalDB;
     }
 
     if ( predominantColor ) {

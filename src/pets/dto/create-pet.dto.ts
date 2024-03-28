@@ -11,6 +11,11 @@ export class CreatePetDto {
     @Type( () => Date )
     birthday: Date;
 
+    @IsDefined({ message: 'La raza debe estar definida' })
+    @IsUUID('4', { message: 'La raza debe ser un UUID' })
+    @IsNotEmpty({ message: 'La raza no puede estar vacía' })
+    breed?: string;
+
     @IsNumber({}, { message: 'La altura debe ser en número' })
     @IsOptional()
     height?: number;

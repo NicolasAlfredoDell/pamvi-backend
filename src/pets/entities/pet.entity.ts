@@ -1,6 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
+import { BreedOfAnimal } from 'src/breed-of-animals/entities/breed-of-animal.entity';
 import { Color } from 'src/colors/entities/color.entity';
 import { GenderOfAnimal } from 'src/gender-of-animals/entities/gender-of-animal.entity';
 import { SpeciesOfAnimals } from 'src/species-of-animals/entities/species-of-animal.entity';
@@ -8,6 +9,13 @@ import { User } from 'src/users/entities';
 
 @Entity()
 export class Pet {
+
+    @ManyToOne(
+        () => BreedOfAnimal,
+        (breedOfAnimal) => breedOfAnimal.pet,
+        { onDelete: 'CASCADE', nullable: true }
+    )
+    breed: SpeciesOfAnimals;
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
