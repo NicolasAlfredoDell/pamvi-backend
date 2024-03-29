@@ -50,7 +50,7 @@ export class AuthController {
     @UseInterceptors(
         FileInterceptor( 'avatar', {
             fileFilter: fileFilter,
-            limits: { fileSize: 10000 },
+            // limits: { fileSize: 10000 },
             storage: diskStorage({
                 filename: fileNamer,
                 destination: './static/uploads/users',

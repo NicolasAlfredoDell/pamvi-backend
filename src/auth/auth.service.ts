@@ -131,8 +131,6 @@ export class AuthService {
         createUserDto: CreateUserDto,
         avatar: Express.Multer.File,
     ) {
-        return avatar;
-
         const { gender, password, passwordConfirm, typeOfUser, ...userDetails } = createUserDto;
         
         if ( password !== passwordConfirm )

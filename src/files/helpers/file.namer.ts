@@ -5,7 +5,7 @@ export const fileNamer = (
     file: Express.Multer.File,
     cb: Function,
 ) => {
-    const fileExtension = file.mimetype.split('/')[1];
+    const fileExtension: string = file.mimetype.split('/')[1];
 
     const fileName: string = `${uuid()}.${fileExtension}`;
 

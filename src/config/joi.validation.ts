@@ -7,6 +7,7 @@ export const JoiValidationSchema = Joi.object({
     DBPORT: Joi.number().default(5432),
     DBUSERNAME: Joi.string().default('postgres'),
     DEFAULT_LIMIT: Joi.number().default(5),
+    FILESEXTENSIONSIMAGEVALID: Joi.array(),
     HOST_API: Joi.string(),
     JWTSECRET: Joi.string(),
     MAILHOST: Joi.string().default('smtp.gmail.com'),

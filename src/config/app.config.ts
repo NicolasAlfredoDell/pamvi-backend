@@ -6,6 +6,7 @@ export const EnvConfiguration = () => ({
     dbPort: process.env.DB_PORT || 5432,
     dbUsername: process.env.DB_USERNAME || 'postgres',
     defaultLimit: +process.env.DEFAULT_LIMIT || 5,
+    filesExtensionsImageValid: process.env.FILES_EXTENSIONS_IMAGE_VALID,
     hostApi: process.env.HOST_API,
     jwtSecret: process.env.JWT_SECRET,
     mailHost: process.env.MAIL_HOST || 'smtp.gmail.com',
