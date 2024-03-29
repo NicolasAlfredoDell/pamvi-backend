@@ -1,10 +1,11 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
+import { AnimalShelter } from 'src/animal-shelter/entities/animal-shelter.entity';
 import { GenderOfUser } from 'src/gender-of-users/entities/gender-of-user.entity';
 import { Pet } from "src/pets/entities/pet.entity";
 import { TypesOfUser } from 'src/types-of-users/entities/types-of-user.entity';
-import { UserImage } from "./user-image.entity";
+import { UserImage } from './user-image.entity';
 import { Report } from 'src/reports/entities/report.entity';
 
 @Entity()
@@ -13,11 +14,18 @@ export class User {
     // FALTA LOCACION
 
     @OneToMany(
+        () => AnimalShelter,
+        (animalShelter) => animalShelter.owner,
+        { cascade: true }
+    )
+    animalShelter: AnimalShelter;
+
+    @OneToMany(
         () => UserImage,
         (userImage) => userImage.user,
         { cascade: true }
     )
-    avatar?: UserImage[];
+    images?: UserImage[];
 
     @Column('date')
     birthday: Date;

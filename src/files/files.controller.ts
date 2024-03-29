@@ -28,29 +28,35 @@ export class FilesController {
     private readonly configService: ConfigService,
   ) {}
 
-  @Get(':fileName')
-  findFile(
-    @Res() res: Response,
-    @Param('fileName') fileName: string,
-  ) {
-    const path = this.filesService.getStaticFile(fileName);
-    res.sendFile(path);
-  } 
+  // @Get(':fileName')
+  // findFile(
+  //   @Res() res: Response,
+  //   @Param('fileName') fileName: string,
+  // ) {
+  //   const path = this.filesService.getStaticFile(fileName);
+  //   res.sendFile(path);
+  // } 
 
-  @Post('files')
-  @UseInterceptors( FileInterceptor('file', {
-    fileFilter: fileFilter,
-    // limits: { fileSize: 10000 },
-    storage: diskStorage({
-      filename: fileNamer,
-      destination: './static/uploads',
-    }),
-  }) )
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if ( !file ) throw new BadRequestException('Asegurate de enviar un archivo');
+  @Post('upload-user-images')
+  @UseInterceptors(
+    FileInterceptor( 'file', {
+      fileFilter: fileFilter,
+      // limits: { fileSize: 10000 },
+      storage: diskStorage({
+        filename: fileNamer,
+        destination: './static/uploads/users',
+      }),
+    })
+  )
+  uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if ( !file )
+      throw new BadRequestException('Asegurate de seleccionar una imagen');
 
     const secureUrl = `${this.configService.get('HOST_API')}${file.filename}`;
 
     return secureUrl;
   }
+
 }

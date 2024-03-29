@@ -1,8 +1,14 @@
-import { Body, Controller, Param, Patch, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { diskStorage } from 'multer';
+
+import { Body, Controller, Param, Patch, Post, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserDto, SendMailRecoveryPasswordDto, SendMailRegisterDto } from './dto';
+
+// Helpers
+import { fileFilter, fileNamer } from 'src/files/helpers';
 
 // Services
 import { AuthService } from './auth.service';
@@ -41,10 +47,21 @@ export class AuthController {
 
     @Post('register')
     @UsePipes(ValidationPipe)
+    @UseInterceptors(
+        FileInterceptor( 'avatar', {
+            fileFilter: fileFilter,
+            limits: { fileSize: 10000 },
+            storage: diskStorage({
+                filename: fileNamer,
+                destination: './static/uploads/users',
+            }),
+        }),
+    )
     register(
+        @UploadedFile() avatar: Express.Multer.File,
         @Body() createUserDto: CreateUserDto,
     ) {
-        return this.authService.register(createUserDto);
+        return this.authService.register(createUserDto, avatar);
     }
 
     @Post('send-mail-register')

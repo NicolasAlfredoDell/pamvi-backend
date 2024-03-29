@@ -129,7 +129,10 @@ export class AuthService {
 
     async register(
         createUserDto: CreateUserDto,
+        avatar: Express.Multer.File,
     ) {
+        return avatar;
+
         const { gender, password, passwordConfirm, typeOfUser, ...userDetails } = createUserDto;
         
         if ( password !== passwordConfirm )
@@ -149,6 +152,7 @@ export class AuthService {
             const user = this.authRepository.create({
                 ...userDetails,
                 gender: genderDB,
+                images: [],
                 password: bcrypt.hashSync(password, 10),
                 typeOfUser: typeOfUserDB,
             });

@@ -6,6 +6,9 @@ export class CreateUserDto {
 
      // FALTA LOCACION
 
+    @IsOptional()
+    avatar?: any;
+
     @IsDefined({ message: 'La fecha de nacimiento debe estar definida' })
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })
     @IsNotEmpty({ message: 'La fecha de nacimiento no puede estar vacía' })
@@ -35,13 +38,6 @@ export class CreateUserDto {
     @IsUUID('4', { message: 'El género debe ser un UUID' })
     @IsNotEmpty({ message: 'El género no puede estar vacío' })
     gender: string;
-
-    @ArrayMinSize(1)
-    @ArrayMaxSize(1)
-    @IsString({ each: true })
-    @IsArray()
-    @IsOptional()
-    images?: string[];
 
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })

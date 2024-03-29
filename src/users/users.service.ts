@@ -2,14 +2,14 @@ import { DataSource, Repository } from 'typeorm';
 import { validate as isUUID } from 'uuid';
 
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './dto';
 
 // Entites
-import { User, UserImage } from './entities';
+import { User } from './entities';
 
 // Services
 import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
@@ -23,9 +23,6 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  
-    @InjectRepository(UserImage)
-    private readonly userImageRepository: Repository<UserImage>,
 
     private readonly dataSource: DataSource,
 
@@ -37,7 +34,7 @@ export class UsersService {
   async create(
     createUserDto: CreateUserDto,
   ) {
-    const { gender, images = [], typeOfUser, ...userDetails } = createUserDto;
+    const { gender, typeOfUser, ...userDetails } = createUserDto;
 
     const genderDB = await this.genderOfUsersService.findOne(gender);
 
@@ -52,14 +49,14 @@ export class UsersService {
     try {
       const user = await this.userRepository.create({
         ...userDetails,
-        avatar: images.map( image => this.userImageRepository.create({ url: image }) ),
         gender: genderDB,
+        images: [],
         typeOfUser: typeOfUserDB,
       });
       
       await this.userRepository.save( user );
 
-      return { ...user, images };
+      return { ...user };
     } catch (error) { this.handleDBException(error) }
   }
 
@@ -112,7 +109,7 @@ export class UsersService {
       take: limit,
       skip: offset,
       relations: {
-        avatar: true,
+        images: true,
       },
     });
 
@@ -121,7 +118,7 @@ export class UsersService {
       users: users.map(
         ( user ) => ({
           ...user,
-          avatar: user.avatar.map( img => img.url )
+          images: user.images.map( img => img.url )
         })
       )
     }
@@ -148,11 +145,11 @@ export class UsersService {
   async findOnePlain(
     term: string,
   ) {
-    const { avatar = [], ...rest } = await this.findOne( term );
+    const { images = [], ...rest } = await this.findOne( term );
     
     return {
       ...rest,
-      images: avatar.map( avatar => avatar.url )
+      images: images.map( image => image.url )
     }
   }
 
@@ -206,8 +203,6 @@ export class UsersService {
       ...userDetails,
       gender: genderDB,
       typeOfUser: typeOfUserDB,
-      //? ESTO SIRVE PARA EL CREATE
-      //? avatar: images.map( ( image ) => this.userImageRepository.create({ url: image }) )
     });
 
     if ( !user )
@@ -218,11 +213,6 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      if ( images ) {
-        await queryRunner.manager.delete( UserImage, { user: {id} } );
-        user.avatar = images.map( image => this.userImageRepository.create({ url: image }) );
-      }
-
       await queryRunner.manager.save(user);
       await queryRunner.commitTransaction();
       await queryRunner.release();
