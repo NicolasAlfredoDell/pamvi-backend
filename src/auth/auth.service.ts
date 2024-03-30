@@ -128,8 +128,8 @@ export class AuthService {
     }
 
     async register(
-        createUserDto: CreateUserDto,
         avatar: Express.Multer.File,
+        createUserDto: CreateUserDto,
     ) {
         const { gender, password, passwordConfirm, typeOfUser, ...userDetails } = createUserDto;
         
