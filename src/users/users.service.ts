@@ -205,9 +205,9 @@ export class UsersService {
     if ( !user )
       throw new NotFoundException(`El usuario no existe.`);
 
-    // Eliminar la imagen
+    // Eliminar la imagen de la carpeta
     // Agregar la nueva imagen
-    // Almacenar en la BD
+    // Almacenar en la BD la url en el usuario
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
