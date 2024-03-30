@@ -20,23 +20,21 @@ export class User {
     )
     animalShelter: AnimalShelter;
 
-    @OneToMany(
-        () => UserImage,
-        (userImage) => userImage.user,
-        { cascade: true }
-    )
-    images?: UserImage[];
+    @Column('text', {
+        nullable: true,
+    })
+    avatar: string;
 
     @Column('date')
     birthday: Date;
+    
+    @Column('timestamp')
+    created_at: Date;
     
     @Column('boolean', {
         default: true,
     })
     disabled: boolean;
-
-    @Column('timestamp')
-    created_at: Date;
 
     @Column('text', {
         unique: true,
@@ -62,6 +60,13 @@ export class User {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @OneToMany(
+        () => UserImage,
+        (userImage) => userImage.user,
+        { cascade: true }
+    )
+    images?: UserImage[];
 
     @Column('text', {
         nullable: true,

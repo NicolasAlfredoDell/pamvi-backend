@@ -1,4 +1,5 @@
-import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 // Decorators
 import { Auth } from './decorators/user.decorator';
@@ -72,9 +73,13 @@ export class UsersController {
   @Patch(':id')
   // @Auth(ValidRoles.superUser, ValidRoles.admin)
   @UsePipes(ValidationPipe)
+  @UseInterceptors(
+    FileInterceptor('avatar')
+  )
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() avatar: Express.Multer.File,
   ) {
     return this.usersService.update(id, updateUserDto);
   }

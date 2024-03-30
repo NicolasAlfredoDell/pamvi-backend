@@ -20,7 +20,7 @@ async function main() {
     })
   );
 
-  await app.listen(process.env.PORT);
-  logger.log(`Aplicación corriendo en el puerto ${process.env.PORT}`);
+  await app.listen(process.env.API_PORT);
+  logger.log(`Aplicación corriendo en el puerto ${process.env.API_PORT}`);
 }
 main();

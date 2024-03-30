@@ -15,23 +15,24 @@ export class FilesService {
         private configService: ConfigService,
     ) {}
 
-    // getStaticFile(
-    //     fileName: string,
-    // ) {
-    //     const path: string = join(__dirname, '../../static/uploads', fileName);
+    getStaticFile(
+        fileName: string,
+        folder: string,
+    ) {
+        const path: string = join(__dirname, `../../static/uploads/${folder}/`, fileName);
 
-    //     if ( existsSync(path) )
-    //         throw new BadRequestException(`No se encontró el archivo con el nombre ${fileName}`);
+        if ( !existsSync(path) )
+            throw new BadRequestException(`No se encontró el archivo con el nombre ${fileName}`);
 
-    //     return path;
-    // }
+        return path;
+    }
 
     validateFiles(
         destinationFilesDto: DestinationFilesDto,
         files: Array<Express.Multer.File>,
     ) {
         const destination: string = destinationFilesDto.destination;
-
+        
         if ( !files || files.length == 0 )
             throw new BadRequestException(`Debe seleccionar al menos ${destination == 'user' ? 'una imagen.' : 'un archivo.'}`);
     
@@ -47,8 +48,8 @@ export class FilesService {
         this.removeFilesInDirectory(destinationFilesDto);
     
         return {
-            mes: `Imágenes guardadas`,
-            securesUrls: this.saveFiles(destinationFilesDto, files),
+            message: `Imágenes guardadas`,
+            ...this.saveFiles(destinationFilesDto, files),
         };
     }
     
@@ -58,7 +59,7 @@ export class FilesService {
     ): void {
         for ( const file of files ) {
             if ( file.size > 10000000 )
-                throw new BadRequestException(`${destination == 'user' ? 'La imagen' : 'El archivo'} ${file.originalname} no debe pesar más de 10 mega.`);
+                throw new BadRequestException(`${destination == 'user' ? 'La imagen' : 'El archivo'} ${file.originalname} no puede pesar más de 10 megas.`);
         }
     }
     
@@ -66,19 +67,19 @@ export class FilesService {
         files: Array<Express.Multer.File>,
         destination: string,
     ): void {
-        const validExtensions = destination == 'user'
+        const validExtensions = destination == 'users'
             ? this.configService.get('FILES_EXTENSIONS_IMAGE_VALID')
             : null;
     
         for (const file of files) {
             const typeExtension = file.mimetype.split('/')[0];
             
-            if ( destination == 'user' && typeExtension !== 'image' ) 
+            if ( destination == 'users' && typeExtension != 'image' ) 
                 throw new BadRequestException(`Debe ingresar una imagen`);
-
+        
             const fileExtension = file.mimetype.split('/')[1];
     
-            if ( !validExtensions.includes( fileExtension ) )
+            if ( !validExtensions.includes(fileExtension) )
                 throw new BadRequestException(`${destination == 'user' ? 'Imagen' : 'Archivo'} ${file.originalname} no tiene una extensión válida.`);
         }
     }
@@ -86,29 +87,36 @@ export class FilesService {
     private removeFilesInDirectory(
         destinationFilesDto: DestinationFilesDto,
     ) {
-        const urlsFiles: string[] = destinationFilesDto.filesStorageRemove;
-    
-        urlsFiles.forEach( ( urlFile: string ) => unlinkSync( urlFile ) );
+        if ( destinationFilesDto.filesStorageRemove ) {
+            const urlsFiles: string[] = destinationFilesDto.filesStorageRemove;
+            urlsFiles.forEach( ( urlFile: string ) => unlinkSync( urlFile ) );
+        }
     }
     
     private saveFiles(
         destinationFilesDto: DestinationFilesDto,
         files: Array<Express.Multer.File>,
-    ): string[] {
+    ) {
+        let filesName: string[] = [];
         let securesUrls: string[] = [];
     
-        for (const file of files) {
+        for ( const file of files ) {
             const fileExtension = file.mimetype.split('/')[1];
             const fileName = `${uuid()}.${fileExtension}`;
     
-            writeFileSync(`./static/${destinationFilesDto.destination}/${fileName}`, file.buffer);
+            writeFileSync(`./static/uploads/${destinationFilesDto.destination}/${fileName}`, file.buffer);
+
+            filesName.push(fileName);
     
             securesUrls.push(
                 `${this.configService.get('API_PROTOCOL')}://${this.configService.get('API_HOST')}:${this.configService.get('API_PORT')}/api/files/${fileName}`
             );
         }
     
-        return securesUrls;
+        return {
+            filesName,
+            securesUrls,
+        };
     }
 
 }

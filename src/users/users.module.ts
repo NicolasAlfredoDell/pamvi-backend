@@ -10,6 +10,7 @@ import { UsersController } from './users.controller';
 import { User, UserImage } from './entities';
 
 // Modules
+import { FilesModule } from 'src/files/files.module';
 import { GenderOfUsersModule } from 'src/gender-of-users/gender-of-users.module';
 import { TypesOfUsersModule } from 'src/types-of-users/types-of-users.module';
 
@@ -25,6 +26,7 @@ import { UsersService } from './users.service';
   ],
   imports: [
     ConfigModule,
+    FilesModule,
     GenderOfUsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     TypesOfUsersModule,

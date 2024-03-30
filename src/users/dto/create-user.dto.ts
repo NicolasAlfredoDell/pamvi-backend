@@ -1,13 +1,10 @@
 import { Type } from 'class-transformer';
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString,
+import { IsDate, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString,
     IsUUID, IsUrl, Matches, MaxDate, MaxLength, MinDate, MinLength } from 'class-validator';
 
 export class CreateUserDto {
 
      // FALTA LOCACION
-
-    @IsOptional()
-    avatar?: any;
 
     @IsDefined({ message: 'La fecha de nacimiento debe estar definida' })
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida' })

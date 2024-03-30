@@ -17,5 +17,8 @@ import { FilesService } from './files.service';
   imports: [
     ConfigModule,
   ],
+  exports: [
+    FilesService,
+  ]
 })
 export class FilesModule {}

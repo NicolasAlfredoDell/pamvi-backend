@@ -1,5 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsDefined, IsNotEmpty, IsOptional, IsString, IsUUID, IsUrl,
-    Matches, MaxDate, MinDate } from 'class-validator';
+import { IsDate, IsDefined, IsNotEmpty, IsOptional, IsString, IsUUID, IsUrl, Matches, MaxDate, MinDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateUserDto {
@@ -20,13 +19,6 @@ export class UpdateUserDto {
     @IsUUID('4', { message: 'El género debe ser un UUID' })
     @IsNotEmpty({ message: 'El género no puede estar vacío' })
     gender: string;
-
-    @ArrayMinSize(1)
-    @ArrayMaxSize(1)
-    @IsString({ each: true })
-    @IsArray()
-    @IsOptional()
-    images?: string[];
 
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })

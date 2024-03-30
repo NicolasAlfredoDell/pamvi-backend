@@ -4,6 +4,7 @@
 /build
 
 /postgres
+/static/uploads
 
 .env
 .env.prod

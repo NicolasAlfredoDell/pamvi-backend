@@ -1,4 +1,5 @@
-import { Body, Controller, Param, Patch, Post, UploadedFile, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 // DTOs
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -41,6 +42,9 @@ export class AuthController {
 
     @Post('register')
     @UsePipes(ValidationPipe)
+    @UseInterceptors(
+        FileInterceptor('avatar')
+    )
     register(
         @UploadedFile() avatar: Express.Multer.File,
         @Body() createUserDto: CreateUserDto,

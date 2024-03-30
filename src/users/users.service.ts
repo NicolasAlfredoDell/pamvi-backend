@@ -5,8 +5,8 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
-import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Entites
 import { User } from './entities';
@@ -127,7 +127,7 @@ export class UsersService {
   async findOne(
     term: string,
   ) {
-    let user: User;
+    let user: User = null;
 
     isUUID(term)
       ? user = await this.userRepository.findOneBy({ id: term })
@@ -135,9 +135,6 @@ export class UsersService {
                         .createQueryBuilder('user')
                         .where('user.dni = :term OR user.email = :term', { term })
                         .getOne();
-
-    if ( !user )
-      throw new NotFoundException(`No existe el usuario.`);
 
     return user;
   }
@@ -186,7 +183,7 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
   ) {
-    const { gender, images = [], typeOfUser, ...userDetails } = updateUserDto;
+    const { gender, typeOfUser, ...userDetails } = updateUserDto;
 
     const genderDB = await this.genderOfUsersService.findOne(gender);
 
@@ -207,6 +204,10 @@ export class UsersService {
 
     if ( !user )
       throw new NotFoundException(`El usuario no existe.`);
+
+    // Eliminar la imagen
+    // Agregar la nueva imagen
+    // Almacenar en la BD
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
