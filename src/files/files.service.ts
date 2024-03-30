@@ -6,7 +6,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 // DTOs
-import { DestinationFilesDto } from './dto/destination-files.dto';
+import { DestinationFilesDto, validateFolders } from './dto/destination-files.dto';
 
 @Injectable()
 export class FilesService {
@@ -27,17 +27,20 @@ export class FilesService {
         return path;
     }
 
-    validateFiles(
+    uploadFiles(
         destinationFilesDto: DestinationFilesDto,
         files: Array<Express.Multer.File>,
     ) {
         const destination: string = destinationFilesDto.destination;
         
+        if ( !validateFolders.includes(destination) )
+            throw new BadRequestException(`El destino no es un valor aceptado.`);
+        
         if ( !files || files.length == 0 )
             throw new BadRequestException(`Debe seleccionar al menos ${destination == 'user' ? 'una imagen.' : 'un archivo.'}`);
     
         switch (destination) {
-            case 'user':
+            case 'users':
                 if ( files.length > 1 )
                     throw new BadRequestException(`Como máximo 1 imagen.`);
             break;

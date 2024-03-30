@@ -162,7 +162,7 @@ export class AuthService {
             destination: 'users',
             filesStorageRemove: null,
         };
-        const { filesName } = this.filesService.validateFiles( destinationFilesDto, [avatar] );
+        const { filesName } = this.filesService.uploadFiles( destinationFilesDto, [avatar] );
 
         try {
             const user = this.authRepository.create({

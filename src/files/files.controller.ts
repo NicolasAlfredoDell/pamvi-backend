@@ -13,7 +13,7 @@ export class FilesController {
 
   constructor(
     private readonly filesService: FilesService,
-  ) {}
+  ) { }
 
   @Get(':folder/:fileName')
   getFile(
@@ -21,8 +21,7 @@ export class FilesController {
     @Param('folder') folder: string,
     @Res() res: Response,
   ) {
-    const path = this.filesService.getStaticFile(fileName, folder);
-    res.sendFile(path);
+    res.sendFile( this.filesService.getStaticFile(fileName, folder) );
   } 
 
   @Post('upload-user-images')
@@ -30,7 +29,7 @@ export class FilesController {
     @Body() destinationFilesDto: DestinationFilesDto, 
     @UploadedFile() files: Array<Express.Multer.File>,
   ) {
-    this.filesService.validateFiles(destinationFilesDto, files);
+    this.filesService.uploadFiles(destinationFilesDto, files);
   }
 
 }

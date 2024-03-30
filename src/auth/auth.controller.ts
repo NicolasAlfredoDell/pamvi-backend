@@ -43,7 +43,7 @@ export class AuthController {
     @Post('register')
     @UsePipes(ValidationPipe)
     @UseInterceptors(
-        FileInterceptor('avatar')
+        FileInterceptor('avatar'),
     )
     register(
         @UploadedFile() avatar: Express.Multer.File,
