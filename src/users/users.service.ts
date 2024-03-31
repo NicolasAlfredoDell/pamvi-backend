@@ -64,20 +64,20 @@ export class UsersService {
     if ( typeOfUserDB.disabled )
       throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
-    let filesName = null;
+    let fileNameAvatar = null;
     if ( avatar ) {
       const destinationFilesDto: DestinationFilesDto = {
         destination: 'users',
         filesStorageRemove: null,
       };
-      const data = await this.filesService.uploadFiles( destinationFilesDto, [avatar] );
-      filesName = data.filesName;
+      const imagesData = await this.filesService.uploadFiles( destinationFilesDto, [avatar] );
+      fileNameAvatar = imagesData.filesName[0];
     }
 
     try {
       const user = await this.userRepository.create({
         ...userDetails,
-        avatar: filesName[0] ? filesName[0] : null,
+        avatar: fileNameAvatar ? fileNameAvatar : null,
         gender: genderDB,
         images: [],
         password: bcrypt.hashSync(password, 10),
