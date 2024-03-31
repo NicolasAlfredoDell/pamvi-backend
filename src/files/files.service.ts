@@ -87,7 +87,7 @@ export class FilesService {
         }
     }
     
-    private removeFilesInDirectory(
+    removeFilesInDirectory(
         destinationFilesDto: DestinationFilesDto,
     ) {
         if ( destinationFilesDto.filesStorageRemove ) {

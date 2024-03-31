@@ -96,15 +96,15 @@ export class AuthService {
         recoveryPasswordDto: RecoveryPasswordDto,
         token: string,
     ) {
-        const { password, passwordConfirm } = recoveryPasswordDto;
-
-        if ( password !== passwordConfirm )
-            throw new BadRequestException(`Las contraseñas no coinciden.`);
-
         const { email, exp } = await this.jwtService.decode(token);
 
         if ( exp < Date.now() / 1000 )
             throw new UnauthorizedException(`Debe volver a solicitar el correo para la activación de su cuenta.`);
+
+        const { password, passwordConfirm } = recoveryPasswordDto;
+
+        if ( password !== passwordConfirm )
+            throw new BadRequestException(`Las contraseñas no coinciden.`);
 
         const user = await this.userRepository.findOne({
             where: { email },
@@ -158,16 +158,20 @@ export class AuthService {
         if ( typeOfUserDB.disabled )
             throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
-        const destinationFilesDto: DestinationFilesDto = {
-            destination: 'users',
-            filesStorageRemove: null,
-        };
-        const { filesName } = this.filesService.uploadFiles( destinationFilesDto, [avatar] );
+        let filesName = null;
+        if ( avatar ) {
+            const destinationFilesDto: DestinationFilesDto = {
+                destination: 'users',
+                filesStorageRemove: null,
+            };
+            const data = await this.filesService.uploadFiles( destinationFilesDto, [avatar] );
+            filesName = data.filesName;
+        }
 
         try {
             const user = this.authRepository.create({
                 ...userDetails,
-                avatar: filesName[0],
+                avatar: filesName[0] ? filesName[0] : null,
                 gender: genderDB,
                 password: bcrypt.hashSync(password, 10),
                 typeOfUser: typeOfUserDB,

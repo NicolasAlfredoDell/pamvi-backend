@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile, Post } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 // Decorators
@@ -6,7 +6,7 @@ import { Auth } from './decorators/user.decorator';
 
 // DTOs
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 // Entities
 import { User } from './entities';
@@ -82,6 +82,19 @@ export class UsersController {
     @UploadedFile() avatar: Express.Multer.File,
   ) {
     return this.usersService.update(id, updateUserDto, avatar);
+  }
+
+  @Post()
+  // @Auth(ValidRoles.superUser, ValidRoles.admin)
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(
+    FileInterceptor('avatar')
+  )
+  create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    return this.usersService.create(createUserDto, avatar);
   }
 
   // @Delete('disabled/:id')

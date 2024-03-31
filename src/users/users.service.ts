@@ -1,3 +1,5 @@
+import * as bcrypt from 'bcrypt';
+
 import { DataSource, Repository } from 'typeorm';
 import { validate as isUUID } from 'uuid';
 
@@ -37,8 +39,20 @@ export class UsersService {
 
   async create(
     createUserDto: CreateUserDto,
+    avatar?: Express.Multer.File,
   ) {
-    const { gender, typeOfUser, ...userDetails } = createUserDto;
+    const { gender, password, passwordConfirm, typeOfUser, ...userDetails } = createUserDto;
+
+    if ( password !== passwordConfirm )
+            throw new BadRequestException(`Las contraseñas no son iguales.`);
+
+    let userDB = await this.findOne( userDetails.email );
+    if ( userDB )
+        throw new BadRequestException(`El correo ya se encuentra registrado.`);
+
+    userDB = await this.findOne( userDetails.dni );
+    if ( userDB )
+        throw new BadRequestException(`El dni ya se encuentra registrado.`);
 
     const genderDB = await this.genderOfUsersService.findOne(gender);
 
@@ -50,11 +64,23 @@ export class UsersService {
     if ( typeOfUserDB.disabled )
       throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
+    let filesName = null;
+    if ( avatar ) {
+      const destinationFilesDto: DestinationFilesDto = {
+        destination: 'users',
+        filesStorageRemove: null,
+      };
+      const data = await this.filesService.uploadFiles( destinationFilesDto, [avatar] );
+      filesName = data.filesName;
+    }
+
     try {
       const user = await this.userRepository.create({
         ...userDetails,
+        avatar: filesName[0] ? filesName[0] : null,
         gender: genderDB,
         images: [],
+        password: bcrypt.hashSync(password, 10),
         typeOfUser: typeOfUserDB,
       });
       
@@ -159,6 +185,9 @@ export class UsersService {
   ) {
     const user = await this.findOne(id);
 
+    const destinationFilesDto: DestinationFilesDto = { destination: 'users', filesStorageRemove: [user.avatar] };
+    await this.filesService.removeFilesInDirectory(destinationFilesDto);
+
     try {
       await this.userRepository.remove( user );
   
@@ -170,6 +199,13 @@ export class UsersService {
 
   async removeAll() {
     const query = this.userRepository.createQueryBuilder('user');
+
+    const users = await this.userRepository.find({});
+    const destinationFilesDto: DestinationFilesDto = { destination: 'users', filesStorageRemove: [] };
+    users.forEach( ( user: User ) => {
+      destinationFilesDto.filesStorageRemove.push( user.avatar );
+    });
+    await this.filesService.removeFilesInDirectory(destinationFilesDto);
 
     try {
       await query
