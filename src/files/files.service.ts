@@ -91,7 +91,12 @@ export class FilesService {
         destinationFilesDto: DestinationFilesDto,
     ) {
         if ( destinationFilesDto.filesStorageRemove ) {
-            const urlsFiles: string[] = destinationFilesDto.filesStorageRemove;
+            let urlsFiles: string[] = [];
+
+            destinationFilesDto.filesStorageRemove.forEach( ( fileStorageRemove: any ) => {
+                urlsFiles.push(`./static/uploads/${destinationFilesDto.destination}/${fileStorageRemove}`);
+            });
+
             urlsFiles.forEach( ( urlFile: string ) => unlinkSync( urlFile ) );
         }
     }

@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 // Dtos
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { DestinationFilesDto } from 'src/files/dto/destination-files.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 // Entites
@@ -14,6 +15,7 @@ import { User } from './entities';
 // Services
 import { GenderOfUsersService } from '../gender-of-users/gender-of-users.service';
 import { TypesOfUsersService } from 'src/types-of-users/types-of-users.service';
+import { FilesService } from '../files/files.service';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +27,8 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
 
     private readonly dataSource: DataSource,
+
+    private readonly filesService: FilesService,
 
     private readonly genderOfUsersService: GenderOfUsersService,
 
@@ -182,6 +186,7 @@ export class UsersService {
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
+    avatar: Express.Multer.File,
   ) {
     const { gender, typeOfUser, ...userDetails } = updateUserDto;
 
@@ -195,7 +200,7 @@ export class UsersService {
     if ( typeOfUserDB.disabled )
       throw new BadRequestException(`El tipo de usuario está deshabilitado.`);
 
-    const user = await this.userRepository.preload({
+    const user: any = await this.userRepository.preload({
       id,
       ...userDetails,
       gender: genderDB,
@@ -204,10 +209,12 @@ export class UsersService {
 
     if ( !user )
       throw new NotFoundException(`El usuario no existe.`);
-
-    // Eliminar la imagen de la carpeta
-    // Agregar la nueva imagen
-    // Almacenar en la BD la url en el usuario
+    
+    if ( avatar ) {
+      const destinationFilesDto: DestinationFilesDto = { destination: 'users', filesStorageRemove: [user.avatar] };
+      const { filesName } = await this.filesService.uploadFiles(destinationFilesDto, [avatar]);
+      user.avatar = filesName[0];
+    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
