@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
 import { AnimalShelter } from 'src/animal-shelter/entities/animal-shelter.entity';
@@ -13,9 +13,9 @@ export class User {
 
     // FALTA LOCACION
 
-    @OneToMany(
+    @ManyToMany(
         () => AnimalShelter,
-        (animalShelter) => animalShelter.owner,
+        (animalShelter) => animalShelter.ownerUser,
         { cascade: true }
     )
     animalShelter: AnimalShelter;

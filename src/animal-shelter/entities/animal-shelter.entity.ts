@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // Entities
 import { User } from 'src/users/entities';
@@ -51,12 +51,13 @@ export class AnimalShelter {
     @Column('text')
     objetive: string;
 
-    @ManyToOne(
+    @ManyToMany(
         () => User,
         (user) => user.animalShelter,
         { onDelete: 'CASCADE' }
     )
-    owner: User;
+    @JoinTable()
+    ownerUser: User[];
 
     @Column('text', {
         nullable: true,

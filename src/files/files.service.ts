@@ -40,7 +40,7 @@ export class FilesService {
             throw new BadRequestException(`Debe seleccionar al menos ${destination == 'user' ? 'una imagen.' : 'un archivo.'}`);
     
         switch (destination) {
-            case 'users':
+            case 'avatarUsers':
                 if ( files.length > 1 )
                     throw new BadRequestException(`Como máximo 1 imagen.`);
             break;
@@ -70,14 +70,14 @@ export class FilesService {
         files: Array<Express.Multer.File>,
         destination: string,
     ): void {
-        const validExtensions = destination == 'users'
+        const validExtensions = destination == 'avatarUsers'
             ? this.configService.get('FILES_EXTENSIONS_IMAGE_VALID')
             : null;
     
         for (const file of files) {
             const typeExtension = file.mimetype.split('/')[0];
             
-            if ( destination == 'users' && typeExtension != 'image' ) 
+            if ( destination == 'avatarUsers' && typeExtension != 'image' ) 
                 throw new BadRequestException(`Debe ingresar una imagen`);
         
             const fileExtension = file.mimetype.split('/')[1];

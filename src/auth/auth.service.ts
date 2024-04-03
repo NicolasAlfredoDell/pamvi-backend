@@ -161,7 +161,7 @@ export class AuthService {
         let fileNameAvatar = null;
         if ( avatar ) {
             const destinationFilesDto: DestinationFilesDto = {
-                destination: 'users',
+                destination: 'avatarUsers',
                 filesStorageRemove: null,
             };
             const imagesData = await this.filesService.uploadFiles( destinationFilesDto, [avatar] );

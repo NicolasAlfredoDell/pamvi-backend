@@ -1,13 +1,13 @@
 import { IsArray, IsIn, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
-export const validateFolders = ['users'];
+export const validateFolders = ['avatarUsers'];
 
 export class DestinationFilesDto {
 
     @IsString({ message: `El destino debe ser un string.` })
     @MaxLength(30, { message: `El destino debe tener como maximo 30 caracteres.` })
     @MinLength(3, { message: `El destino debe tener como minimo 3 caracteres.` })
-    @IsIn(validateFolders, { message: `Los valores posibles son: 'users'`})
+    @IsIn(validateFolders, { message: `Los valores posibles son: 'avatarUsers'`})
     readonly destination: string;
 
     @IsOptional()

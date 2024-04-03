@@ -67,7 +67,7 @@ export class UsersService {
     let fileNameAvatar = null;
     if ( avatar ) {
       const destinationFilesDto: DestinationFilesDto = {
-        destination: 'users',
+        destination: 'avatarUsers',
         filesStorageRemove: null,
       };
       const imagesData = await this.filesService.uploadFiles( destinationFilesDto, [avatar] );
@@ -247,7 +247,7 @@ export class UsersService {
       throw new NotFoundException(`El usuario no existe.`);
     
     if ( avatar ) {
-      const destinationFilesDto: DestinationFilesDto = { destination: 'users', filesStorageRemove: [user.avatar] };
+      const destinationFilesDto: DestinationFilesDto = { destination: 'avatarUsers', filesStorageRemove: [user.avatar] };
       const { filesName } = await this.filesService.uploadFiles(destinationFilesDto, [avatar]);
       user.avatar = filesName[0];
     }
