@@ -71,40 +71,40 @@ export class SeedService {
     const insertPromise = [];
 
     switch (table) {
-      case 'typesOfUsers':
-        data.forEach( ( d ) => insertPromise.push( this.typesOfUsersService.create(d) ) );
-        break;
-    
-      case 'speciesOfAnimals':
-        data.forEach( ( d ) => insertPromise.push( this.speciesOfAnimalsService.create(d) ) );
-        break;
-
-      case 'reports':
-        data.forEach( ( d ) => insertPromise.push( this.reportsService.create(d) ) );
-        break;
-
-      case 'genderOfUsers':
-        data.forEach( ( d ) => insertPromise.push( this.genderOfUsersService.create(d) ) );
-        break;
-
-      case 'genderOfAnimals':
-        data.forEach( ( d ) => insertPromise.push( this.genderOfAnimalsService.create(d) ) );
+      case 'breedOfAnimals':
+        data.forEach( ( d ) => insertPromise.push( this.breedOfAnimalsService.create(d) ) );
         break;
 
       case 'colors':
         data.forEach( ( d ) => insertPromise.push( this.colorsService.create(d) ) );
         break;
 
-      case 'breedOfAnimals':
-        data.forEach( ( d ) => insertPromise.push( this.breedOfAnimalsService.create(d) ) );
+      case 'genderOfAnimals':
+        data.forEach( ( d ) => insertPromise.push( this.genderOfAnimalsService.create(d) ) );
+        break;
+
+      case 'genderOfUsers':
+        data.forEach( ( d ) => insertPromise.push( this.genderOfUsersService.create(d) ) );
+        break;
+        
+      case 'pets':
+        data.forEach( ( d ) => insertPromise.push( this.petsService.create(d) ) );
+        break;
+
+      case 'reports':
+        data.forEach( ( d ) => insertPromise.push( this.reportsService.create(d) ) );
+        break;
+
+      case 'speciesOfAnimals':
+        data.forEach( ( d ) => insertPromise.push( this.speciesOfAnimalsService.create(d) ) );
+        break;
+        
+      case 'typesOfUsers':
+        data.forEach( ( d ) => insertPromise.push( this.typesOfUsersService.create(d) ) );
         break;
 
       case 'users':
         data.forEach( ( d ) => insertPromise.push( this.usersService.create(d) ) );
-        break;
-
-      case 'pets':
-        data.forEach( ( d ) => insertPromise.push( this.petsService.create(d) ) );
         break;
     }
 

@@ -1,4 +1,4 @@
-import { IsDate, IsDefined, IsNotEmpty, IsOptional, IsString, IsUUID, IsUrl, Matches, MaxDate, MinDate } from 'class-validator';
+import { IsBoolean, IsDate, IsDefined, IsNotEmpty, IsOptional, IsString, IsUUID, IsUrl, Matches, MaxDate, MinDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateUserDto {
@@ -23,6 +23,11 @@ export class UpdateUserDto {
     @IsOptional()
     @IsUrl({}, { message: 'Ingrese una url válida' })
     instagram?: string;
+
+    @IsBoolean({ message: 'Debe ser verdadero o falso' })
+    @IsOptional()
+    @Type( () => Boolean )
+    isVeterinarian: boolean;
 
     @IsNotEmpty({ message: 'El o los apellidos no pueden estar vacíos' })
     @IsOptional()

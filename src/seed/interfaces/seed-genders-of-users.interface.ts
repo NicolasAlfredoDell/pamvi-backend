@@ -1,4 +1,4 @@
-type ValidNames = 'Hombre'|'Mujer';
+type ValidNames = 'Hombre'|'Indefinido'|'Mujer';
 
 export interface SeedGendersOfUsers {
 

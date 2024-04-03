@@ -122,6 +122,12 @@ export const initialData: SeedData = {
         {
             created_at: new Date(),
             disabled: false,
+            name: 'Indefinido',
+            updated_at: null,
+        },
+        {
+            created_at: new Date(),
+            disabled: false,
             name: 'Mujer',
             updated_at: null,
         }
@@ -136,13 +142,6 @@ export const initialData: SeedData = {
         },
         {
             created_at: new Date(),
-            description: 'Eres dueño/a de una protectora de animales.',
-            disabled: false,
-            name: 'Protectora de animales',
-            updated_at: null,
-        },
-        {
-            created_at: new Date(),
             description: 'Eres el dueño de la aplicación.',
             disabled: false,
             name: 'Super administrador',
@@ -153,13 +152,6 @@ export const initialData: SeedData = {
             description: 'Tienes mascotas, quieres registrarlas para llevar un control y/o quieres poner mascotas en adopción.',
             disabled: false,
             name: 'Usuario',
-            updated_at: null,
-        },
-        {
-            created_at: new Date(),
-            description: 'Eres dueño/a de una veterinaria.',
-            disabled: false,
-            name: 'Veterinario',
             updated_at: null,
         },
     ],

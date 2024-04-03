@@ -73,6 +73,9 @@ export class User {
     })
     instagram: string;
 
+    @Column('bool')
+    isVeterinarian: boolean;
+
     @Column('text')
     lastnames: string;
 
