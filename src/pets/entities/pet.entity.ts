@@ -50,6 +50,11 @@ export class Pet {
     })
     identificationNumber: number;
 
+    @Column('boolean', {
+        default: false,
+    })
+    isLost: boolean;
+
     @Column('text',{
         unique: true,
     })
