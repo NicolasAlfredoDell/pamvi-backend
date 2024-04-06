@@ -4,6 +4,7 @@ export const JoiValidationSchema = Joi.object({
     APIHOST: Joi.string().default('localhost'),
     APIPORT: Joi.number().default(3000),
     APIPROTOCOL: Joi.string().default('http'),
+    APPVERSION: Joi.string().default('0.0.1'),
     CORSORIGIN: Joi.string().default('http://localhost:3000/'),
     DBHOST: Joi.string(),
     DBNAME: Joi.string().default('PAMVIDB'),
@@ -18,4 +19,5 @@ export const JoiValidationSchema = Joi.object({
     MAILPASSWORD: Joi.string(),
     MAILSENDER: Joi.string().default('nicolasalfredodell@gmail.com'),
     MAILUSER: Joi.string().default('nicolasalfredodell@gmail.com'),
+    STAGE: Joi.string().default('dev'),
 });

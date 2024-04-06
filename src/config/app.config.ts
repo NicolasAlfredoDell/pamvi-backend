@@ -2,6 +2,7 @@ export const EnvConfiguration = () => ({
     apiHost: process.env.API_HOST,
     apiPort: +process.env.API_PORT,
     apiProtocol: +process.env.API_PROTOCOL,
+    appVersion: process.env.APP_VERSION || '0.0.1',
     corsOrigin: +process.env.CORS_ORIGIN,
     environment: process.env.NODE_ENV || 'dev',
     dbHost: process.env.DB_HOST,
@@ -16,4 +17,5 @@ export const EnvConfiguration = () => ({
     mailPassword: process.env.MAIL_PASSWORD,
     mailSender: process.env.MAIL_SENDER,
     mailUser: process.env.MAIL_USER,
+    stage: process.env.STAGE || 'dev',
 });
