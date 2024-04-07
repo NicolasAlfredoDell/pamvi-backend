@@ -4,6 +4,7 @@
 /build
 
 /postgres
+/pgAdmin
 /static/uploads
 
 .env

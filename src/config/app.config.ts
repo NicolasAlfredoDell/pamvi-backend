@@ -17,5 +17,7 @@ export const EnvConfiguration = () => ({
     mailPassword: process.env.MAIL_PASSWORD,
     mailSender: process.env.MAIL_SENDER,
     mailUser: process.env.MAIL_USER,
+    managerDbEmail: process.env.MANAGERDB_EMAIL,
+    managerDbPassword: process.env.MANAGERDB_PASSWORD,
     stage: process.env.STAGE || 'dev',
 });
